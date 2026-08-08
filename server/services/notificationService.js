@@ -80,6 +80,7 @@ Complete today's learning before the day ends.`;
   }
 
   // Check SMS settings
+  /*
   if (user.smsReminderEnabled) {
     try {
       const smsResult = await sendSMS({
@@ -108,6 +109,7 @@ Complete today's learning before the day ends.`;
       logs.push(log);
     }
   }
+  */
 
   return logs;
 };

@@ -78,56 +78,8 @@ exports.sendTestEmail = async (req, res) => {
 
 // POST /api/notifications/test-sms
 exports.sendTestSMS = async (req, res) => {
-  try {
-    const user = await User.findOne();
-    if (!user) {
-      return res.status(404).json({ error: 'User settings not found' });
-    }
-
-    const testBody = `📚 Data Engineering Roadmap: This is a test SMS. If you received this, your Twilio credentials and phone number config are active!`;
-
-    console.log(`[Test SMS] Attempting test SMS to ${user.phoneNumber}...`);
-    const result = await sendSMS({
-      to: user.phoneNumber,
-      body: testBody,
-      isTest: true
-    });
-
-    // Log the successful test SMS
-    await NotificationLog.create({
-      userId: user._id,
-      dayNumber: 0, // Using 0 for tests
-      type: 'SMS',
-      status: 'SUCCESS',
-      message: `Test SMS sent successfully to ${user.phoneNumber}. ${result.mocked ? '(MOCK)' : ''}`
-    });
-
-    res.json({
-      success: true,
-      message: `Test SMS sent successfully to ${user.phoneNumber}.`,
-      mocked: result.mocked
-    });
-  } catch (error) {
-    console.error('[Test SMS Error]:', error);
-
-    // Log the failed test SMS
-    try {
-      const user = await User.findOne();
-      await NotificationLog.create({
-        userId: user ? user._id : null,
-        dayNumber: 0,
-        type: 'SMS',
-        status: 'FAILED',
-        error: error.message,
-        message: 'Test SMS failed to send'
-      });
-    } catch (logErr) {
-      console.error('Failed to log SMS notification failure in DB:', logErr);
-    }
-
-    res.status(400).json({
-      success: false,
-      error: error.message
-    });
-  }
+  res.status(400).json({
+    success: false,
+    error: 'SMS reminder features are currently disabled/commented out by configuration.'
+  });
 };
