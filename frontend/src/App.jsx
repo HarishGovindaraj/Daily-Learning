@@ -87,7 +87,7 @@ function AppContent() {
                 letterSpacing: '-0.02em'
               }}
             >
-              Roadmap Tracker
+              Personal Roadmap Tracker
             </span>
           </div>
         </Header>
@@ -150,9 +150,9 @@ function AppContent() {
               <span style={{ marginRight: 8, fontSize: '0.85rem' }}>Active Syllabus:</span>
               {progress < 100 && !!activeRoadmap ? (
                 <Tooltip title="Once selected, you cannot modify your syllabus path until it is 100% completed!">
-                  <span style={{ 
-                    color: '#f8fafc', 
-                    fontWeight: 700, 
+                  <span style={{
+                    color: '#f8fafc',
+                    fontWeight: 700,
                     fontSize: '0.9rem',
                     background: '#1e293b',
                     padding: '4px 12px',

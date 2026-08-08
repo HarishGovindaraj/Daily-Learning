@@ -43,7 +43,7 @@ export default function Login() {
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <span style={{ fontSize: '3rem' }}>📚</span>
           <Title level={3} style={{ marginTop: 12, fontWeight: 800 }}>Sign In</Title>
-          <Text type="secondary">45-Day Roadmap Tracker</Text>
+          <Text type="secondary">Convenient Personal Roadmap Tracker</Text>
         </div>
 
         {error && (
