@@ -25,13 +25,15 @@ const sendEmail = async ({ to, subject, html, isTest = false }) => {
       });
       
       const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || 'Resend API error');
+      if (response.ok) {
+        return { success: true, info: data };
       }
-      return { success: true, info: data };
+      
+      console.warn(`[Email Service] Resend API rejected recipient (${to}):`, data.message);
+      console.warn('[Email Service] Attempting SMTP fallback...');
     } catch (error) {
-      console.error('[Resend Service Error]:', error.message);
-      throw error;
+      console.warn(`[Email Service] Resend fetch error to ${to}:`, error.message);
+      console.warn('[Email Service] Attempting SMTP fallback...');
     }
   }
 
@@ -62,7 +64,9 @@ const sendEmail = async ({ to, subject, html, isTest = false }) => {
   });
 
   const mailOptions = {
-    from: process.env.REMINDER_EMAIL || `"Data Engineering Roadmap" <${process.env.SMTP_USER}>`,
+    from: (process.env.REMINDER_EMAIL && !process.env.REMINDER_EMAIL.includes('resend.dev'))
+      ? process.env.REMINDER_EMAIL
+      : `"Roadmap Tracker" <${process.env.SMTP_USER}>`,
     to,
     subject,
     html
