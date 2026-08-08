@@ -18,16 +18,14 @@ const verifyCaptcha = async (req, res, next) => {
 
   try {
     console.log('[Captcha Middleware] Verifying Turnstile token...');
+    const params = new URLSearchParams();
+    params.append('secret', secretKey);
+    params.append('response', captchaToken);
+    params.append('remoteip', req.ip);
+
     const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        secret: secretKey,
-        response: captchaToken,
-        remoteip: req.ip
-      })
+      body: params
     });
 
     const data = await response.json();
