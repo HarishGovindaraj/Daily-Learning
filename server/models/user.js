@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema(
     },
     activeRoadmap: {
       type: String,
-      enum: ['data-engineering', 'full-stack', 'java', 'flutter'],
+      enum: ['data-engineering', 'full-stack', 'java', 'flutter', 'angular', 'sql-database'],
       default: null
     },
     resetPasswordOTP: {

@@ -309,7 +309,7 @@ exports.getDashboardData = async (req, res) => {
 exports.selectRoadmap = async (req, res) => {
   try {
     const { roadmapType } = req.body;
-    const allowed = ['data-engineering', 'full-stack', 'java', 'flutter'];
+    const allowed = ['data-engineering', 'full-stack', 'java', 'flutter', 'angular', 'sql-database'];
 
     if (!allowed.includes(roadmapType)) {
       return res.status(400).json({ error: 'Invalid roadmap type selected' });

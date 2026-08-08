@@ -17,7 +17,9 @@ const getRoadmapLabel = (val) => {
     'data-engineering': 'Data Engineering',
     'full-stack': 'Full Stack',
     'java': 'Java Developer',
-    'flutter': 'Flutter Developer'
+    'flutter': 'Flutter Developer',
+    'angular': 'Angular Developer',
+    'sql-database': 'SQL & Database Developer'
   };
   return map[val] || val;
 };
@@ -190,7 +192,9 @@ function AppContent() {
                           { value: 'data-engineering', label: 'Data Engineering' },
                           { value: 'full-stack', label: 'Full Stack' },
                           { value: 'java', label: 'Java Developer' },
-                          { value: 'flutter', label: 'Flutter Developer' }
+                          { value: 'flutter', label: 'Flutter Developer' },
+                          { value: 'angular', label: 'Angular Developer' },
+                          { value: 'sql-database', label: 'SQL & Database Developer' }
                         ]}
                         dropdownStyle={{ background: '#111827' }}
                       />
@@ -282,11 +286,13 @@ function AppContent() {
                         placeholder="Select Path"
                         onChange={(val) => { handleRoadmapChange(val); setDrawerVisible(false); }}
                         style={{ width: '100%' }}
-                        options={[
+                         options={[
                           { value: 'data-engineering', label: 'Data Engineering' },
                           { value: 'full-stack', label: 'Full Stack' },
                           { value: 'java', label: 'Java Developer' },
-                          { value: 'flutter', label: 'Flutter Developer' }
+                          { value: 'flutter', label: 'Flutter Developer' },
+                          { value: 'angular', label: 'Angular Developer' },
+                          { value: 'sql-database', label: 'SQL & Database Developer' }
                         ]}
                         dropdownStyle={{ background: '#111827' }}
                       />
