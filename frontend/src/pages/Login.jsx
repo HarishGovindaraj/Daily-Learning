@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Card, Form, Input, Button, Alert, Typography, Space, message } from 'antd';
 import { MailOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons';
 import { api } from '../services/api';
+import Turnstile from '../components/Turnstile';
 
 const { Title, Text } = Typography;
 
@@ -10,12 +11,17 @@ export default function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [captchaToken, setCaptchaToken] = useState('');
 
   const onFinish = async (values) => {
     try {
+      if (!captchaToken) {
+        setError('Please complete the security check.');
+        return;
+      }
       setLoading(true);
       setError(null);
-      const data = await api.login(values.email, values.password);
+      const data = await api.login(values.email, values.password, captchaToken);
 
       // Save credentials in localStorage
       localStorage.setItem('token', data.token);
@@ -92,6 +98,8 @@ export default function Login() {
           <div style={{ textAlign: 'right', marginBottom: 20 }}>
             <Link to="/forgot-password" style={{ color: '#4f46e5', fontSize: '0.85rem' }}>Forgot Password?</Link>
           </div>
+
+          <Turnstile onSuccess={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
 
           <Form.Item>
             <Button

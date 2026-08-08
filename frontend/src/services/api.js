@@ -28,18 +28,18 @@ const handleResponse = async (response) => {
 
 export const api = {
   // Authentication APIs
-  login: (email, password) => 
+  login: (email, password, captchaToken) => 
     fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password, captchaToken })
     }).then(handleResponse),
 
-  signup: (name, email, password, phoneNumber) => 
+  signup: (name, email, password, phoneNumber, captchaToken) => 
     fetch(`${API_BASE_URL}/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password, phoneNumber })
+      body: JSON.stringify({ name, email, password, phoneNumber, captchaToken })
     }).then(handleResponse),
 
   forgotPassword: (email) => 

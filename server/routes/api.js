@@ -5,10 +5,11 @@ const roadmapController = require('../controllers/roadmapController');
 const settingsController = require('../controllers/settingsController');
 const notificationController = require('../controllers/notificationController');
 const { protect } = require('../middleware/auth');
+const { verifyCaptcha } = require('../middleware/captcha');
 
 // Public Authentication Routes
-router.post('/auth/signup', authController.signup);
-router.post('/auth/login', authController.login);
+router.post('/auth/signup', verifyCaptcha, authController.signup);
+router.post('/auth/login', verifyCaptcha, authController.login);
 router.post('/auth/forgot-password', authController.forgotPassword);
 router.post('/auth/reset-password', authController.resetPassword);
 

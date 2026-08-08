@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Card, Form, Input, Button, Alert, Typography, message } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, PhoneOutlined, UserAddOutlined } from '@ant-design/icons';
 import { api } from '../services/api';
+import Turnstile from '../components/Turnstile';
 
 const { Title, Text } = Typography;
 
@@ -10,12 +11,17 @@ export default function Signup() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [captchaToken, setCaptchaToken] = useState('');
 
   const onFinish = async (values) => {
     try {
+      if (!captchaToken) {
+        setError('Please complete the security check.');
+        return;
+      }
       setLoading(true);
       setError(null);
-      await api.signup(values.name, values.email, values.password, values.phoneNumber);
+      await api.signup(values.name, values.email, values.password, values.phoneNumber, captchaToken);
 
       message.success('User account created successfully! Please log in to continue.');
       navigate('/login');
@@ -104,6 +110,8 @@ export default function Signup() {
               style={{ background: '#0b0f19', border: '1px solid #1e293b' }}
             />
           </Form.Item>
+
+          <Turnstile onSuccess={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
 
           <Form.Item>
             <Button
