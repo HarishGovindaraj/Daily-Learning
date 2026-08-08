@@ -3,6 +3,7 @@
  */
 const verifyCaptcha = async (req, res, next) => {
   const secretKey = process.env.TURNSTILE_SECRET_KEY ? process.env.TURNSTILE_SECRET_KEY.trim() : null;
+  console.log('[Captcha Middleware] Loaded Secret Key:', JSON.stringify(secretKey), 'Length:', secretKey ? secretKey.length : 0);
   
   // If no secret key is set, log a warning and bypass verification to avoid locking out the system
   if (!secretKey) {
