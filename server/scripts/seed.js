@@ -37,6 +37,22 @@ const p5_fl = 'PHASE 5 — STATE MANAGEMENT';
 const p6_fl = 'PHASE 6 — API INTEGRATION';
 const p7_fl = 'PHASE 7 — DATABASES, TESTING & RELEASES';
 
+const p1_ang = 'PHASE 1 — TYPESCRIPT & WEB FUNDAMENTALS';
+const p2_ang = 'PHASE 2 — ANGULAR FUNDAMENTALS';
+const p3_ang = 'PHASE 3 — ROUTING, FORMS & HTTP';
+const p4_ang = 'PHASE 4 — RXJS & STATE MANAGEMENT';
+const p5_ang = 'PHASE 5 — ADVANCED ANGULAR';
+const p6_ang = 'PHASE 6 — TESTING, PROJECT & DEPLOYMENT';
+const p7_ang = 'PHASE 7 — INTERVIEW PREPARATION';
+
+const p1_sql = 'PHASE 1 — SQL FUNDAMENTALS';
+const p2_sql = 'PHASE 2 — ADVANCED SQL';
+const p3_sql = 'PHASE 3 — DATABASE DESIGN';
+const p4_sql = 'PHASE 4 — ORACLE / PL-SQL';
+const p5_sql = 'PHASE 5 — TRANSACTIONS & PERFORMANCE';
+const p6_sql = 'PHASE 6 — DATABASE ENGINEERING';
+const p7_sql = 'PHASE 7 — INTERVIEW PREPARATION';
+
 // Load Data Engineering Roadmap
 const deRoadmap = [
   { dayNumber: 1, phase: p1_de, topic: 'Relational Data + SQL Foundations', description: 'Establish strong foundational knowledge in relational modeling, standard and advanced SQL operators, and core concepts of data quality engineering like deduplication and integrity check systems.', tasks: ['Create relational tables', 'Oracle data types', 'Primary keys', 'Default values', 'INSERT', 'INSERT SELECT', 'CONNECT BY LEVEL', 'LPAD', 'CASE', 'MOD', 'TO_CHAR', 'DBMS_RANDOM', 'JOIN', 'LEFT JOIN', 'GROUP BY', 'HAVING', 'COUNT', 'SUM', 'NULL validation', 'Duplicate detection', 'Referential integrity', 'Data reconciliation', 'ROW_NUMBER introduction', 'Bronze/Silver/Gold introduction'] },
@@ -128,7 +144,7 @@ const fsRoadmap = [
   { dayNumber: 38, phase: p6_fs, topic: 'CORS & Security Headers', description: 'Protect your API. Configure CORS whitelist parameters and load Helmet secure headers.', tasks: ['CORS origin whitelists', 'CORS preflight checks', 'Helmet middleware integration', 'XSS protections'] },
   { dayNumber: 39, phase: p6_fs, topic: 'Request Validation (Joi/Zod)', description: 'Validate incoming request body payloads using schema validation libraries before executing database queries.', tasks: ['Zod schema definitions', 'Express validation middleware', 'Body parse error catch', 'Safe schema validation'] },
   { dayNumber: 40, phase: p6_fs, topic: 'File Uploads (Multer)', description: 'Support file upload actions. Configure local folder uploads, file filters, and size constraints.', tasks: ['multer storage configs', 'File filter options', 'Multipart parser middleware', 'Local path responses'] },
-  { dayNumber: 41, phase: p7_fs, topic: 'Backend Unit Testing (Jest)', description: 'Configure Jest. Write unit tests verifying controller return payloads and mock services.', tasks: ['Jest install & setup', 'test() assertions', 'describe() test blocks', 'Mock service calls'] },
+  { dayNumber: 41, phase: p7_fs, topic: 'Backend Unit Testing (Jest)', description: 'Configure Jest. Write unit tests verifying controller return payloads and mock services.', tasks: ['Jest install & setup', 'test() assertions' , 'describe() test blocks', 'Mock service calls'] },
   { dayNumber: 42, phase: p7_fs, topic: 'API Integration Testing (Supertest)', description: 'Perform end-to-end integration tests of Express REST routes. Verify endpoints return correct JSON formats and HTTP codes.', tasks: ['Supertest configuration', 'Request route assertions', 'Database seed test sets', 'Clean environment teardown'] },
   { dayNumber: 43, phase: p7_fs, topic: 'Docker Containers', description: 'Package Node projects into Docker containers. Write Dockerfile configurations and ignore rules.', tasks: ['Write node Dockerfile', 'Build docker images', 'Run docker container ports', '.dockerignore configurations'] },
   { dayNumber: 44, phase: p7_fs, topic: 'CI/CD Pipelines (GitHub Actions)', description: 'Configure continuous integration pipelines. Set up build checkers and automatic test runners on git pushes.', tasks: ['.github/workflows yaml configuration', 'Node build checks setup', 'Environment variables injections', 'CI validation runs'] },
@@ -233,77 +249,167 @@ const flutterRoadmap = [
   { dayNumber: 45, phase: p7_fl, topic: 'Apple App Store Releases', description: 'Package iOS apps. Compile IPA archives, sign certificates, and configure App Store Connect.', tasks: ['Xcode provisioning profile configurations', 'Xcode Product Archive commands', 'App Store Connect build uploads', 'TestFlight user distributions'] }
 ];
 
+// Load Angular Developer Roadmap
+const angularRoadmap = [
+  { dayNumber: 1, phase: p1_ang, topic: 'TypeScript Fundamentals', description: 'Establish strong foundational knowledge in TypeScript syntax, declaring variables with proper types, using type inference, and defining interfaces and type aliases.', tasks: ['Declare variables with appropriate types', 'Understand type inference behavior', 'Define interfaces for object shapes', 'Create type aliases for complex structures', 'Write typed functions with return types', 'Execute basic TypeScript compiler tasks'] },
+  { dayNumber: 2, phase: p1_ang, topic: 'Advanced TypeScript Basics', description: 'Deepen your TypeScript knowledge with union and intersection types, optional property flags, numeric and string enums, generics, and custom type guards.', tasks: ['Implement union types for flex values', 'Construct intersection types to combine structures', 'Use optional properties in interfaces', 'Define numeric and string enums', 'Create reusable generic classes/functions', 'Write custom type guard functions'] },
+  { dayNumber: 3, phase: p1_ang, topic: 'Modern TypeScript Utility Types', description: 'Master TypeScript utility types and type operators to map, filter, and transform schemas efficiently.', tasks: ['Use keyof operator to extract keys', 'Use typeof operator to query types', 'Apply Partial to make properties optional', 'Apply Pick to select specific keys', 'Apply Omit to exclude specific keys', 'Apply Readonly to make properties immutable'] },
+  { dayNumber: 4, phase: p1_ang, topic: 'JavaScript Concepts for Angular', description: 'Review modern ECMAScript features essential for writing clean Angular code, focusing on block scopes, modern functions, destructuring, and async control flow.', tasks: ['Use let and const block scopes', 'Write ES6 arrow functions', 'Implement object and array destructuring', 'Apply spread and rest operators', 'Import/export ES modules', 'Use async/await with native Promises'] },
+  { dayNumber: 5, phase: p1_ang, topic: 'HTML Fundamentals for Angular', description: 'Understand clean HTML document structure, interactive inputs, semantic elements, tables, and core accessibility features needed for styling templates.', tasks: ['Write semantic HTML document markup', 'Build accessible forms and form controls', 'Configure input elements with types', 'Create tables with descriptive headers', 'Implement accessibility basic properties', 'Validate HTML markup compatibility'] },
+  { dayNumber: 6, phase: p1_ang, topic: 'CSS Fundamentals for Styling', description: 'Master CSS layout strategies using Box model, Flexbox, Grid layouts, media queries, and modular styling.', tasks: ['Apply Box model padding and margins', 'Construct layouts using CSS Flexbox', 'Design layout structures using CSS Grid', 'Configure responsive media queries', 'Styling scoped component tags', 'Implement fluid typographic scales'] },
+  { dayNumber: 7, phase: p2_ang, topic: 'Angular Architecture Overview', description: 'Learn Angular application architecture. Scaffold projects, analyze component structures, modules, and component lifecycles.', tasks: ['Install Angular CLI globally', 'Generate a new Angular project workspace', 'Analyze project folders structure', 'Understand standalone components', 'Configure main app bootstrap settings', 'Trace Angular lifecycle phases'] },
+  { dayNumber: 8, phase: p2_ang, topic: 'Angular Components', description: 'Create and configure Angular components. Learn component metadata decorator options, template layouts, and style scopes.', tasks: ['Generate components with CLI tools', 'Configure component metadata decorators', 'Link external template HTML files', 'Define local scoped style sheets', 'Configure component selector tags'] },
+  { dayNumber: 9, phase: p2_ang, topic: 'Template Syntax & Bindings', description: 'Master dynamic template bindings in Angular: interpolation, property binds, event hooks, and two-way data bindings.', tasks: ['Use interpolation string expressions', 'Configure property bindings on elements', 'Bind event handlers to user actions', 'Implement two-way data bindings', 'Write complex template expressions'] },
+  { dayNumber: 10, phase: p2_ang, topic: 'Control Flow Syntax', description: 'Utilize Angular modern control flow directives to conditionally render template blocks and iterate lists efficiently.', tasks: ['Use @if to conditionally render elements', 'Configure @else condition branches', 'Implement @for loops to render lists', 'Use @switch block conditional checks', 'Optimize lists using track keys'] },
+  { dayNumber: 11, phase: p2_ang, topic: 'Component Communication', description: 'Share data between component trees using @Input properties, @Output decorators, and EventEmitter instances.', tasks: ['Pass inputs to child components', 'Define @Output event emitter properties', 'Trigger child events to notify parent', 'Bind parent handlers to child events', 'Verify data binding stream updates'] },
+  { dayNumber: 12, phase: p2_ang, topic: 'Angular Lifecycle Hooks', description: 'Understand lifecycle execution sequence. Implement ngOnInit initialization hooks, change interceptors, and resource cleanup.', tasks: ['Implement ngOnInit initialization', 'Use ngOnChanges parameter maps', 'Implement ngOnDestroy cleanup actions', 'Trace component lifecycle sequence', 'Unsubscribe from active resource hooks'] },
+  { dayNumber: 13, phase: p2_ang, topic: 'Angular Services & DI', description: 'Create injectable Angular services to isolate business logic, manage shared states, and inject dependencies.', tasks: ['Generate injectable service classes', 'Configure dependency injections', 'Manage service scopes and providers', 'Use shared services to sync components', 'Isolate component data business logic'] },
+  { dayNumber: 14, phase: p3_ang, topic: 'Angular Router Basics', description: 'Set up single page routing. Define route paths, bind RouterLink directives, and configure RouterOutlet viewports.', tasks: ['Configure router module paths', 'Add RouterOutlet viewport placeholders', 'Bind RouterLink navigation links', 'Read active route parameter maps', 'Implement programmatic router navigations'] },
+  { dayNumber: 15, phase: p3_ang, topic: 'Advanced Routing & Guards', description: 'Build child routing structures, implement route protection using guards, lazy load features, and pass query parameters.', tasks: ['Define nested child routing paths', 'Implement functional route guards', 'Lazy-load feature component bundles', 'Pass and parse query parameters', 'Preserve state during navigations'] },
+  { dayNumber: 16, phase: p3_ang, topic: 'Template-Driven Forms', description: 'Create and validate user input forms using template-driven form features, binding values to properties.', tasks: ['Configure ngForm directive bindings', 'Bind controls using ngModel directives', 'Add built-in template validations', 'Render contextual form validation errors', 'Submit form data payloads safely'] },
+  { dayNumber: 17, phase: p3_ang, topic: 'Reactive Forms', description: 'Build robust reactive forms using FormGroup, FormControl, and FormBuilder schemas, attaching native validator constraints.', tasks: ['Declare FormGroup fields schemas', 'Bind inputs using formControlName', 'Inject FormBuilder service utility', 'Apply built-in Validators limits', 'Create custom validation functions'] },
+  { dayNumber: 18, phase: p3_ang, topic: 'Advanced Reactive Forms', description: 'Implement dynamic fields arrays using FormArray, cross-field dependency validations, and asynchronous validations.', tasks: ['Implement FormArray dynamic inputs', 'Manage array inserts and deletions', 'Apply cross-field validator functions', 'Create async validation checks', 'Observe status and value change events'] },
+  { dayNumber: 19, phase: p3_ang, topic: 'HttpClient REST Integration', description: 'Connect to external REST services. Execute GET, POST, PUT, and DELETE requests, configuring request headers and parameters.', tasks: ['Inject HttpClient module services', 'Perform GET requests to retrieve lists', 'Send POST payloads to create records', 'Execute PUT updates on database', 'Use DELETE requests to remove entries', 'Add custom authentication headers'] },
+  { dayNumber: 20, phase: p3_ang, topic: 'HTTP Error & State Management', description: 'Handle REST request failures, retry failed network attempts, and render empty, loading, or error states.', tasks: ['Catch HttpErrorResponse payload data', 'Implement network retry operations', 'Display active page loading animations', 'Render empty results state views', 'Intercept service errors globally'] },
+  { dayNumber: 21, phase: p4_ang, topic: 'RxJS Fundamentals', description: 'Learn reactive programming basics. Build Observables, attach Observers, and manage subscriptions.', tasks: ['Construct new Observable instances', 'Define Observer next/error callbacks', 'Manage Subscription lifetimes', 'Use unsubscribe to prevent memory leaks', 'Understand hot versus cold streams'] },
+  { dayNumber: 22, phase: p4_ang, topic: 'RxJS Operators', description: 'Transform and filter reactive streams using RxJS pipeable operators.', tasks: ['Transform values using map operators', 'Filter events using filter operators', 'Execute side-effects with tap hooks', 'Throttle emissions using debounceTime', 'Skip repeats using distinctUntilChanged'] },
+  { dayNumber: 23, phase: p4_ang, topic: 'Advanced RxJS Operators', description: 'Master flattening operators and concurrent combinations to orchestrate multiple HTTP calls.', tasks: ['Use switchMap for auto-cancellation', 'Use mergeMap for concurrent streams', 'Use concatMap for ordered streams', 'Use exhaustMap to ignore events', 'Use forkJoin to combine parallel calls'] },
+  { dayNumber: 24, phase: p4_ang, topic: 'RxJS Subjects', description: 'Understand multicasting in RxJS. Compare Subject, BehaviorSubject, and ReplaySubject for shared state management.', tasks: ['Use Subject for multicast events', 'Use BehaviorSubject to hold states', 'Use ReplaySubject for historic replays', 'Implement service state sharing'] },
+  { dayNumber: 25, phase: p4_ang, topic: 'Angular Signals', description: 'Learn Angular Signals core mechanics. Declare signals, compute derived values, and define side-effect actions.', tasks: ['Declare mutable signals values', 'Write computed read-only derivations', 'Define effect context triggers', 'Implement signal-based local state'] },
+  { dayNumber: 26, phase: p4_ang, topic: 'State Management Patterns', description: 'Evaluate state patterns. Implement local, shared, and service-based states, comparing Signals and RxJS.', tasks: ['Manage isolated local component states', 'Design shared state service patterns', 'Bridge RxJS streams with Signals API', 'Avoid state synchronization issues'] },
+  { dayNumber: 27, phase: p4_ang, topic: 'Angular Performance Optimization', description: 'Optimize Change Detection using OnPush strategies, custom trackBy utilities, and lazy loading.', tasks: ['Configure OnPush change detection', 'Apply change detector ref triggers', 'Use trackBy loops for collection updates', 'Lazy load modular route structures', 'Use pure Pipes for template cache'] },
+  { dayNumber: 28, phase: p5_ang, topic: 'Angular Dependency Injection', description: 'Deep dive into Dependency Injection. Configure providers, inject tokens, and manage provider scopes.', tasks: ['Define providers in configuration', 'Create custom InjectionToken bounds', 'Configure singleton service instances', 'Use element-level provider overrides'] },
+  { dayNumber: 29, phase: p5_ang, topic: 'HTTP Interceptors', description: 'Implement HTTP Interceptors to inject headers, handle authorization, and catch global error payloads.', tasks: ['Generate functional HTTP interceptors', 'Attach Bearer authentication tokens', 'Handle REST authorization errors', 'Log outgoing HTTP configurations'] },
+  { dayNumber: 30, phase: p5_ang, topic: 'Authentication Flows', description: 'Implement authentication. Build login views, store JWTs securely, and enforce auth guards.', tasks: ['Create login user interface forms', 'Store JSON Web Tokens securely', 'Implement router authentication guards', 'Add logout redirection procedures', 'Check token expiry boundaries'] },
+  { dayNumber: 31, phase: p5_ang, topic: 'Authorization & Roles', description: 'Configure role-based access control. Protect routes based on user permission profiles.', tasks: ['Define user role profile interfaces', 'Restrict routes using role guards', 'Toggle elements using roles filters', 'Configure permission validation checks'] },
+  { dayNumber: 32, phase: p5_ang, topic: 'Reusable UI Components', description: 'Design generic, configurable UI components using content projection and clean API inputs/outputs.', tasks: ['Create reusable UI button sets', 'Implement single content projection slots', 'Configure clean API inputs and outputs', 'Manage modular component styling'] },
+  { dayNumber: 33, phase: p5_ang, topic: 'Angular Architecture Patterns', description: 'Organize features into cohesive structures, applying separation of concerns and core modules.', tasks: ['Configure feature-based directory structures', 'Design core module infrastructure', 'Organize shared component libraries', 'Maintain strict separation of concerns'] },
+  { dayNumber: 34, phase: p5_ang, topic: 'Angular Security Best Practices', description: 'Protect applications against XSS attacks, sanitize HTML resources, and manage environment variables.', tasks: ['Sanitize dynamic template HTML', 'Configure DomSanitizer security overrides', 'Store secret keys in environments', 'Secure API call route parameters', 'Configure CSP header guidelines'] },
+  { dayNumber: 35, phase: p6_ang, topic: 'Angular Testing Fundamentals', description: 'Write unit tests using Jasmine and Karma. Configure TestBed and verify basic behaviors.', tasks: ['Initialize Jasmine test configurations', 'Configure TestBed utility classes', 'Write simple unit assertion test checks', 'Execute test suites in terminal'] },
+  { dayNumber: 36, phase: p6_ang, topic: 'Component & Service Testing', description: 'Test components and services. Mock dependencies, verify input bindings, and capture events.', tasks: ['Mock backend service dependency calls', 'Test component input declarations', 'Verify component output event emissions', 'Assert DOM rendered markup matches'] },
+  { dayNumber: 37, phase: p6_ang, topic: 'API Testing & HTTP Mocks', description: 'Verify network integrations using HttpTestingController, mocking responses and checking errors.', tasks: ['Inject HttpTestingController utilities', 'Mock backend REST response payloads', 'Verify exact HTTP request details', 'Test service error callback methods'] },
+  { dayNumber: 38, phase: p6_ang, topic: 'Project: Employee Management Dashboard Layout', description: 'Initialize the Employee Management Dashboard application, building layouts and routes.', tasks: ['Initialize Employee Dashboard layouts', 'Configure navigation sidebars and headers', 'Setup routing views placeholders', 'Implement mock API controller actions'] },
+  { dayNumber: 39, phase: p6_ang, topic: 'Project: Employee CRUD Views', description: 'Implement interactive employee grid tables, filters, pagination, and modals.', tasks: ['Render responsive employee grid tables', 'Add dynamic sorting and search filters', 'Create modal forms for employee edit', 'Integrate CRUD database API endpoints', 'Implement pagination controls'] },
+  { dayNumber: 40, phase: p6_ang, topic: 'Production Build & Deployment', description: 'Optimize Angular application bundles for production, configure environments, and deploy.', tasks: ['Run production optimization build options', 'Configure prod environment configuration files', 'Optimize bundle shaking bundle compiles', 'Deploy build outputs to static hosting', 'Debug remote environment settings'] },
+  { dayNumber: 41, phase: p7_ang, topic: 'Interview Prep: Angular Core', description: 'Review core interview questions on components, templates, directives, lifecycle hooks, and DI.', tasks: ['Practice component lifecycle explanations', 'Explain dependency injection resolution', 'Contrast directives versus components', 'Answer templating syntax questions', 'Perform core coding assessments'] },
+  { dayNumber: 42, phase: p7_ang, topic: 'Interview Prep: Advanced Angular', description: 'Master complex questions on RxJS, Signals, change detection, routing, and guards.', tasks: ['Compare Signals versus RxJS streams', 'Explain zone-based change detection', 'Detail OnPush performance gains', 'Explain routing guards execution steps', 'Answer custom operator questions'] },
+  { dayNumber: 43, phase: p7_ang, topic: 'Interview Prep: TypeScript', description: 'Prepare responses for TypeScript questions: generics, mapped types, type guards, and utilities.', tasks: ['Solve TypeScript generic challenges', 'Explain type erasure processes', 'Contrast interfaces versus type aliases', 'Solve utility type transformations', 'Demonstrate strict type enforcement'] },
+  { dayNumber: 44, phase: p7_ang, topic: 'Interview Prep: System Architecture', description: 'Formulate narratives on state management, authentication, security, and performance optimizations.', tasks: ['Explain state management selections', 'Detail JWT authentication processes', 'Demonstrate bundle optimization techniques', 'Discuss Angular security strategies', 'Review scale architecture designs'] },
+  { dayNumber: 45, phase: p7_ang, topic: 'Mock Interview & Resume Prep', description: 'Perform mock technical interviews, answer coding problems, and refine your resume.', tasks: ['Complete mock technical interviews', 'Solve real-time coding problems', 'Formulate project STAR descriptions', 'Refine Angular Developer resumes', 'Prepare responses for scenario-based questions'] }
+];
+
+// Load SQL & Database Developer Roadmap
+const sqlDatabaseRoadmap = [
+  { dayNumber: 1, phase: p1_sql, topic: 'Relational Database Fundamentals', description: 'Understand relational data structures. Create tables, specify columns, primary/foreign keys, and data types.', tasks: ['Define relational tables structures', 'Create primary and foreign keys', 'Apply NOT NULL constraints', 'Select appropriate column data types', 'Configure default values mappings', 'Verify table constraints relationships'] },
+  { dayNumber: 2, phase: p1_sql, topic: 'SELECT Fundamentals', description: 'Retrieve and format table columns. Use SELECT, WHERE, ORDER BY, DISTINCT, and column aliases.', tasks: ['Write basic SELECT query commands', 'Apply WHERE conditional row filters', 'Sort results using ORDER BY clauses', 'Extract unique values using DISTINCT', 'Specify custom column name aliases', 'Evaluate expressions in query statements'] },
+  { dayNumber: 3, phase: p1_sql, topic: 'Filtering & Operators', description: 'Apply filters using logical operators (AND, OR, NOT), range queries (BETWEEN), list lookups (IN), wildcards (LIKE), and NULL checks.', tasks: ['Apply AND & OR boolean filters', 'Exclude records using NOT operators', 'Filter ranges using BETWEEN matches', 'Match values lists using IN checks', 'Perform wildcard lookups with LIKE', 'Identify missing values with IS NULL'] },
+  { dayNumber: 4, phase: p1_sql, topic: 'Aggregations & Grouping', description: 'Summarize rows using aggregation functions (COUNT, SUM, AVG, MIN, MAX), GROUP BY, and HAVING constraints.', tasks: ['Use COUNT to summarize records', 'Sum numeric columns with SUM', 'Find average metrics using AVG', 'Extract MIN and MAX field values', 'Group rows using GROUP BY targets', 'Filter aggregated groups using HAVING'] },
+  { dayNumber: 5, phase: p1_sql, topic: 'Table Joins', description: 'Query records from multiple tables. Use INNER, LEFT, RIGHT, FULL OUTER, Self, and Cross joins.', tasks: ['Link tables with INNER JOIN keys', 'Include missing entries with LEFT JOIN', 'Configure RIGHT OUTER joins', 'Perform FULL OUTER join bindings', 'Write self join queries on tables', 'Generate cross product coordinates'] },
+  { dayNumber: 6, phase: p1_sql, topic: 'Subqueries', description: 'Construct subqueries. Write scalar, single-row, multi-row, and correlated subqueries, utilizing EXISTS and NOT EXISTS.', tasks: ['Write scalar subqueries in SELECTs', 'Use single-row subqueries in WHEREs', 'Apply multi-row subqueries with IN', 'Write correlated subqueries dynamically', 'Check existence using EXISTS filters', 'Exclude matches with NOT EXISTS'] },
+  { dayNumber: 7, phase: p2_sql, topic: 'Common Table Expressions', description: 'Organize queries using Common Table Expressions (CTEs), including multiple and recursive CTEs.', tasks: ['Write simple CTEs using WITH', 'Chain multiple CTEs in queries', 'Implement recursive CTE loops', 'Deconstruct complex nested queries'] },
+  { dayNumber: 8, phase: p2_sql, topic: 'Window Functions', description: 'Perform calculations over partitions. Use ROW_NUMBER, RANK, DENSE_RANK, PARTITION BY, and ORDER BY.', tasks: ['Assign sequence numbers with ROW_NUMBER', 'Rank rows with gaps using RANK', 'Rank rows without gaps with DENSE_RANK', 'Segment partitions with PARTITION BY', 'Sort partition subsets with ORDER BY'] },
+  { dayNumber: 9, phase: p2_sql, topic: 'Analytical Functions', description: 'Extract offsets using LAG and LEAD, fetch extreme partition values with FIRST_VALUE/LAST_VALUE, and calculate running totals.', tasks: ['Query preceding values using LAG', 'Fetch succeeding values using LEAD', 'Identify first values with FIRST_VALUE', 'Identify last values with LAST_VALUE', 'Compute cumulative running totals'] },
+  { dayNumber: 10, phase: p2_sql, topic: 'Conditional SQL', description: 'Implement conditional logic in SQL queries using CASE, DECODE, COALESCE, and NVL.', tasks: ['Write standard CASE conditional structures', 'Use DECODE value translations', 'Handle NULL fields using COALESCE', 'Apply NVL default value functions', 'Manage conditional calculations'] },
+  { dayNumber: 11, phase: p2_sql, topic: 'Set Operators', description: 'Combine query results using UNION, UNION ALL, INTERSECT, and MINUS/EXCEPT, following alignment rules.', tasks: ['Combine unique rows with UNION', 'Combine all rows using UNION ALL', 'Intersect common rows with INTERSECT', 'Exclude row overlaps using MINUS/EXCEPT', 'Validate column count alignment rules'] },
+  { dayNumber: 12, phase: p2_sql, topic: 'Date & String Functions', description: 'Perform date calculations, convert formats (TO_DATE, TO_CHAR), slice substrings (SUBSTR, INSTR), and replace values.', tasks: ['Calculate date intervals', 'Format dates using TO_CHAR maps', 'Convert string values using TO_DATE', 'Extract characters with SUBSTR', 'Locate character positions with INSTR', 'Replace substrings using REPLACE'] },
+  { dayNumber: 13, phase: p2_sql, topic: 'Advanced SQL Patterns', description: 'Apply advanced SQL patterns to solve top-N queries, retrieve latest records, locate duplicates, and handle gaps-and-islands.', tasks: ['Build top-N filter expressions', 'Retrieve latest status updates', 'Detect duplicate dataset rows', 'Resolve gaps-and-islands data puzzles', 'Optimize complex join combinations'] },
+  { dayNumber: 14, phase: p3_sql, topic: 'Database Normalization', description: 'Deconstruct table structures to eliminate redundancies. Learn 1NF, 2NF, 3NF, BCNF, and review normalization examples.', tasks: ['Deconstruct structures to 1NF', 'Resolve partial keys to 2NF', 'Eliminate transitive dependencies to 3NF', 'Convert tables to BCNF schemas', 'Review normalized database examples'] },
+  { dayNumber: 15, phase: p3_sql, topic: 'Database Relationships', description: 'Define database relationships, including one-to-one, one-to-many, and many-to-many configurations with junction tables.', tasks: ['Configure one-to-one foreign keys', 'Establish one-to-many relationships', 'Design many-to-many junction tables', 'Map integrity constraints rules'] },
+  { dayNumber: 16, phase: p3_sql, topic: 'Data Integrity Constraints', description: 'Enforce database integrity using PRIMARY KEY, FOREIGN KEY, UNIQUE, CHECK, NOT NULL, and DEFAULT constraints.', tasks: ['Configure strict primary key bounds', 'Enforce foreign key checks', 'Add unique index constraints', 'Create check validation bounds', 'Apply NOT NULL constraints', 'Map default value configurations'] },
+  { dayNumber: 17, phase: p3_sql, topic: 'Indexing Architectures', description: 'Accelerate query access speeds. Create B-tree indexes, composite indexes, unique indexes, and manage index files.', tasks: ['Create standard B-tree indexes', 'Implement composite indexes', 'Add unique constraint indexes', 'Formulate index select policies', 'Monitor index usage statistics'] },
+  { dayNumber: 18, phase: p3_sql, topic: 'Views & Materialized Views', description: 'Create virtual tables (Views) and physically stored views (Materialized Views) to secure and accelerate access.', tasks: ['Create basic virtual Views', 'Implement Materialized Views', 'Define materialized refresh schedules', 'Apply database view security'] },
+  { dayNumber: 19, phase: p3_sql, topic: 'Database Design Project', description: 'Design a Retail Order Management Database schema with Customers, Products, Orders, Order Items, Payments, and Categories.', tasks: ['Create physical ER diagrams', 'Specify relationships constraints', 'Apply index and unique checks', 'Validate normalization dependencies'] },
+  { dayNumber: 20, phase: p4_sql, topic: 'PL/SQL Block Structures', description: 'Write anonymous PL/SQL blocks, declaring variables and constants, and controlling execution flow.', tasks: ['Write anonymous PL/SQL blocks', 'Declare typed variables and constants', 'Write conditional IF statements', 'Use conditional CASE expressions', 'Construct simple and loop ranges', 'Define block exception sections'] },
+  { dayNumber: 21, phase: p4_sql, topic: 'PL/SQL Cursors', description: 'Fetch query results dynamically using implicit, explicit, parameter-driven cursors, and cursor FOR loops.', tasks: ['Manage implicit cursor attributes', 'Declare explicit cursor definitions', 'Implement cursor FOR loop scopes', 'Pass arguments to parameterized cursors'] },
+  { dayNumber: 22, phase: p4_sql, topic: 'PL/SQL Exception Handling', description: 'Handle errors gracefully using NO_DATA_FOUND, TOO_MANY_ROWS, OTHERS, and define custom exception objects.', tasks: ['Handle NO_DATA_FOUND exceptions', 'Handle TOO_MANY_ROWS exceptions', 'Capture general errors with OTHERS', 'Raise custom user exceptions', 'Log execution failures to tables'] },
+  { dayNumber: 23, phase: p4_sql, topic: 'Stored Procedures', description: 'Write stored procedures to encapsulate logic. Define IN, OUT, and IN OUT parameter behaviors.', tasks: ['Write CREATE PROCEDURE statements', 'Map IN query input arguments', 'Configure OUT results parameters', 'Define IN OUT modifier values', 'Execute stored procedures'] },
+  { dayNumber: 24, phase: p4_sql, topic: 'PL/SQL Functions', description: 'Create user-defined PL/SQL functions to return values, and compare SQL functions against PL/SQL execution rules.', tasks: ['Write CREATE FUNCTION statements', 'Define return data types', 'Configure input function parameters', 'Compare SQL vs PL/SQL functions'] },
+  { dayNumber: 25, phase: p4_sql, topic: 'PL/SQL Packages', description: 'Group related functions, procedures, and variables into modular package specifications and package bodies.', tasks: ['Write package specification details', 'Implement package body code', 'Manage private package functions', 'Declare global package variables'] },
+  { dayNumber: 26, phase: p4_sql, topic: 'Database Triggers', description: 'Automate table actions using BEFORE/AFTER, row/statement-level triggers on INSERT, UPDATE, and DELETE.', tasks: ['Write BEFORE row modification triggers', 'Write AFTER statement event triggers', 'Track updates using row-level hooks', 'Track changes using statement-level hooks', 'Add auditing logs using triggers', 'Manage mutable tables constraints'] },
+  { dayNumber: 27, phase: p5_sql, topic: 'Transaction Control & ACID', description: 'Manage database transactions. Execute COMMIT, ROLLBACK, SAVEPOINT commands, and understand ACID principles.', tasks: ['Commit transactions using COMMIT', 'Roll back modifications using ROLLBACK', 'Set savepoints with SAVEPOINT', 'Manage transaction boundaries', 'Implement ACID database properties'] },
+  { dayNumber: 28, phase: p5_sql, topic: 'Concurrency & Locks', description: 'Manage concurrency. Understand row locks, table locks, deadlock detection, and transaction isolation levels.', tasks: ['Analyze row-level lock behavior', 'Review table-level lock overrides', 'Debug database deadlock errors', 'Configure isolation levels settings', 'Track active database sessions'] },
+  { dayNumber: 29, phase: p5_sql, topic: 'Execution Plans Analysis', description: 'Inspect query execution strategies. Use EXPLAIN PLAN to check scans, join methods, and costs.', tasks: ['Generate plans with EXPLAIN PLAN', 'Identify full table scans', 'Verify index range lookup scans', 'Identify hash and loop join methods', 'Analyze total query scan cost values'] },
+  { dayNumber: 30, phase: p5_sql, topic: 'SQL Performance Tuning', description: 'Optimize queries by rewriting statements, adding indexes, avoiding unnecessary columns, and updating table statistics.', tasks: ['Apply query tuning modifications', 'Rewrite queries to bypass subqueries', 'Optimize columns selections', 'Utilize index access paths', 'Gather database schema statistics'] },
+  { dayNumber: 31, phase: p5_sql, topic: 'Table Partitioning', description: 'Manage massive tables by partitioning data using range, list, and hash strategies to enable partition pruning.', tasks: ['Implement range partitioning schemas', 'Create list partitioning schemas', 'Create hash partitioning schemas', 'Verify partition pruning queries'] },
+  { dayNumber: 32, phase: p5_sql, topic: 'Performance Troubleshooting', description: 'Troubleshoot database bottlenecks: identify slow queries, check blocking locks, monitor CPU spikes, and analyze indexes.', tasks: ['Identify slow query candidates', 'Troubleshoot blocking lock sessions', 'Track query high CPU usage spikes', 'Analyze tables sizing profiles', 'Locate unused and bloated indexes'] },
+  { dayNumber: 33, phase: p5_sql, topic: 'Tuning Practice Project', description: 'Analyze execution plans of slow queries, add missing indexes, rewrite logic, and compare database runtimes.', tasks: ['Select slow database queries', 'Analyze original execution plans', 'Add optimal index parameters', 'Rewrite queries for efficiency', 'Compare execution runtimes'] },
+  { dayNumber: 34, phase: p6_sql, topic: 'Data Migration Strategies', description: 'Migrate data between schemas using INSERT SELECT, CREATE TABLE AS (CTAS), and validate results.', tasks: ['Write batch INSERT SELECT queries', 'Use CREATE TABLE AS SELECT (CTAS)', 'Apply inline data transformations', 'Validate migration data counts'] },
+  { dayNumber: 35, phase: p6_sql, topic: 'MERGE & UPSERT Logic', description: 'Synchronize target tables with source tables using MERGE statements, handling inserts and updates conditionally.', tasks: ['Write MERGE statement syntax', 'Implement INSERT and UPDATE logic conditionally', 'Handle incremental data synchronization updates', 'Handle missing target records and duplicate source records'] },
+  { dayNumber: 36, phase: p6_sql, topic: 'Data Quality & Validation', description: 'Write queries to validate primary keys, check for orphaned foreign keys, identify null values, and verify business rules.', tasks: ['Locate duplicate table records', 'Isolate null values in columns', 'Identify orphaned foreign key links', 'Write data reconciliation scripts', 'Assert database validation rules'] },
+  { dayNumber: 37, phase: p6_sql, topic: 'Trigger-Based Auditing', description: 'Create shadow audit tables and write triggers to log old/new values, timestamps, and active users.', tasks: ['Create shadow table structures', 'Write update audit logging triggers', 'Record timestamps and session users', 'Maintain audit histories records'] },
+  { dayNumber: 38, phase: p6_sql, topic: 'Backup & Recovery Concepts', description: 'Review backup types and point-in-time recovery strategies.', tasks: ['Review database backup options', 'Explain point-in-time recovery methods', 'Compare cold vs hot backups', 'Draft disaster recovery procedures'] },
+  { dayNumber: 39, phase: p6_sql, topic: 'Database Security', description: 'Secure database access by managing users, roles, granting/revoking permissions, and adhering to least privilege.', tasks: ['Create database user profiles', 'Define system and object roles', 'Grant access rights using GRANT', 'Revoke permissions using REVOKE', 'Apply least privilege access checks', 'Audit database privilege usage'] },
+  { dayNumber: 40, phase: p6_sql, topic: 'Database Project Implementation', description: 'Implement the Retail Order Management Database with tables, constraints, triggers, and package logic.', tasks: ['Create tables and constraints', 'Implement index optimizations', 'Build procedures and audit triggers', 'Validate transactional rollback paths'] },
+  { dayNumber: 41, phase: p7_sql, topic: 'Interview Prep: SQL Queries', description: 'Master complex queries on joins, subqueries, aggregates, window functions, and CTEs.', tasks: ['Solve complex multi-join questions', 'Write scalar and correlated subqueries', 'Construct partition window analytics', 'Solve CTE query challenges', 'Answer duplicate query questions', 'Optimize aggregate calculations'] },
+  { dayNumber: 42, phase: p7_sql, topic: 'Interview Prep: DB Design', description: 'Review database design principles, normalization rules, and index strategies.', tasks: ['Review normalization level rules', 'Design ER layout structures', 'Defend index selection designs', 'Contrast primary vs unique keys', 'Resolve many-to-many designs'] },
+  { dayNumber: 43, phase: p7_sql, topic: 'Interview Prep: PL/SQL Programming', description: 'Prepare responses for PL/SQL questions: exceptions, cursors, packages, and triggers.', tasks: ['Explain explicit cursor lifecycles', 'Detail package state advantages', 'Compare triggers versus procedures', 'Review exception propagation rules', 'Write sample trigger validations', 'Identify mutating table issues'] },
+  { dayNumber: 44, phase: p7_sql, topic: 'Interview Prep: Tuning & Trans', description: 'Practice explaining execution plans, lock dynamics, indexing, and transaction isolation.', tasks: ['Explain query execution plans', 'Contrast index scan versus seek', 'Detail lock escalations escalations', 'Explain transaction isolation levels', 'Draft performance tuning guidelines', 'Identify slow database operations'] },
+  { dayNumber: 45, phase: p7_sql, topic: 'Mock DB Interview & Resume', description: 'Refine database developer resumes, practice scenarios, and perform coding challenges.', tasks: ['Complete mock database interview panels', 'Refine Database Developer resumes', 'Format project accomplishments in STAR', 'Solve SQL coding problems', 'Answer scenario-based design questions', 'Prepare salary negotiation questions'] }
+];
+
 const seedTemplates = async () => {
   try {
     console.log('Connecting to MongoDB Atlas...');
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected.');
 
-    // Clear Roadmap Templates
-    console.log('Clearing existing static RoadmapTemplates...');
-    await RoadmapTemplate.deleteMany({});
-    console.log('RoadmapTemplate collection cleared.');
-
     // Format template insertions
     const dataToSeed = [];
 
-    // 1. Data Engineering
-    deRoadmap.forEach(day => {
-      dataToSeed.push({
-        roadmapType: 'data-engineering',
-        dayNumber: day.dayNumber,
-        phase: day.phase,
-        topic: day.topic,
-        description: day.description,
-        tasks: day.tasks
+    // Helper to format templates
+    const addRoadmapToSeed = (roadmap, type) => {
+      roadmap.forEach(day => {
+        dataToSeed.push({
+          roadmapType: type,
+          dayNumber: day.dayNumber,
+          phase: day.phase,
+          topic: day.topic,
+          description: day.description,
+          tasks: day.tasks
+        });
       });
-    });
+    };
 
-    // 2. Full Stack
-    fsRoadmap.forEach(day => {
-      dataToSeed.push({
-        roadmapType: 'full-stack',
-        dayNumber: day.dayNumber,
-        phase: day.phase,
-        topic: day.topic,
-        description: day.description,
-        tasks: day.tasks
-      });
-    });
+    addRoadmapToSeed(deRoadmap, 'data-engineering');
+    addRoadmapToSeed(fsRoadmap, 'full-stack');
+    addRoadmapToSeed(javaRoadmap, 'java');
+    addRoadmapToSeed(flutterRoadmap, 'flutter');
+    addRoadmapToSeed(angularRoadmap, 'angular');
+    addRoadmapToSeed(sqlDatabaseRoadmap, 'sql-database');
 
-    // 3. Java Developer
-    javaRoadmap.forEach(day => {
-      dataToSeed.push({
-        roadmapType: 'java',
-        dayNumber: day.dayNumber,
-        phase: day.phase,
-        topic: day.topic,
-        description: day.description,
-        tasks: day.tasks
-      });
-    });
+    console.log(`Upserting ${dataToSeed.length} roadmap templates...`);
+    for (const doc of dataToSeed) {
+      await RoadmapTemplate.updateOne(
+        { roadmapType: doc.roadmapType, dayNumber: doc.dayNumber },
+        { $set: doc },
+        { upsert: true }
+      );
+    }
+    console.log('Roadmap templates successfully upserted!');
 
-    // 4. Flutter Developer
-    flutterRoadmap.forEach(day => {
-      dataToSeed.push({
-        roadmapType: 'flutter',
-        dayNumber: day.dayNumber,
-        phase: day.phase,
-        topic: day.topic,
-        description: day.description,
-        tasks: day.tasks
-      });
-    });
+    // Perform verification query
+    const countDE = await RoadmapTemplate.countDocuments({ roadmapType: 'data-engineering' });
+    const countFS = await RoadmapTemplate.countDocuments({ roadmapType: 'full-stack' });
+    const countJV = await RoadmapTemplate.countDocuments({ roadmapType: 'java' });
+    const countFL = await RoadmapTemplate.countDocuments({ roadmapType: 'flutter' });
+    const countANG = await RoadmapTemplate.countDocuments({ roadmapType: 'angular' });
+    const countSQL = await RoadmapTemplate.countDocuments({ roadmapType: 'sql-database' });
 
-    console.log(`Inserting ${dataToSeed.length} roadmap templates...`);
-    await RoadmapTemplate.insertMany(dataToSeed);
-    console.log('Roadmap templates successfully seeded!');
+    const totalRoadmaps = [countDE, countFS, countJV, countFL, countANG, countSQL].filter(c => c > 0).length;
+    const totalDays = countDE + countFS + countJV + countFL + countANG + countSQL;
 
-    // Clean user-specific data to start fresh on auth schema
-    console.log('Resetting User and UserProgress collections...');
-    await User.deleteMany({});
-    await UserProgress.deleteMany({});
-    console.log('Reset complete. Databases are synchronized.');
+    console.log('\n====================================');
+    console.log('ROADMAP SEED VALIDATION');
+    console.log('====================================\n');
+    console.log(`Data Engineering : ${countDE}`);
+    console.log(`Full Stack       : ${countFS}`);
+    console.log(`Java             : ${countJV}`);
+    console.log(`Flutter          : ${countFL}`);
+    console.log(`Angular          : ${countANG}`);
+    console.log(`SQL Database     : ${countSQL}\n`);
+    console.log(`Total Roadmaps   : ${totalRoadmaps}`);
+    console.log(`Total Days       : ${totalDays}\n`);
+    console.log('====================================');
 
     console.log('Seeding process finished successfully.');
     process.exit(0);

@@ -5,7 +5,7 @@ const roadmapTemplateSchema = new mongoose.Schema(
     roadmapType: {
       type: String,
       required: true,
-      enum: ['data-engineering', 'full-stack', 'java', 'flutter']
+      enum: ['data-engineering', 'full-stack', 'java', 'flutter', 'angular', 'sql-database']
     },
     dayNumber: {
       type: Number,

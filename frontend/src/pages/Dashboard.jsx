@@ -239,7 +239,9 @@ export default function Dashboard() {
       'data-engineering': 'Data Engineering',
       'full-stack': 'Full Stack',
       'java': 'Java Developer',
-      'flutter': 'Flutter Developer'
+      'flutter': 'Flutter Developer',
+      'angular': 'Angular Developer',
+      'sql-database': 'SQL & Database Developer'
     };
     return map[val] || val;
   };
@@ -286,6 +288,20 @@ export default function Dashboard() {
               emoji: '📱',
               description: 'Build native multi-platform apps using Dart, widgets layout grids, state management (Bloc/Riverpod), and Firebase.',
               color: '#06b6d4'
+            },
+            {
+              id: 'angular',
+              title: 'Angular Developer',
+              emoji: '🅰️',
+              description: 'Master TypeScript, Angular CLI, standalone components, reactive forms, HttpClient, RxJS state management, and Signals.',
+              color: '#dd0031'
+            },
+            {
+              id: 'sql-database',
+              title: 'SQL & Database Developer',
+              emoji: '🗄️',
+              description: 'Master relational design, normalization, complex SQL queries, window functions, PL/SQL stored procedures, triggers, and query tuning.',
+              color: '#f29111'
             }
           ].map((item) => (
             <Col xs={24} sm={12} key={item.id}>
