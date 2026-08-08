@@ -15,18 +15,23 @@ const generateToken = (id) => {
 exports.signup = async (req, res) => {
   try {
     const { name, email, password, phoneNumber } = req.body;
+    console.log('[Signup API] Received request for email:', email);
 
     if (!name || !email || !password) {
+      console.warn('[Signup API] Missing fields');
       return res.status(400).json({ error: 'Please add all required fields (name, email, password)' });
     }
 
     // Check if user exists
+    console.log('[Signup API] Checking if user exists in DB...');
     const userExists = await User.findOne({ email });
     if (userExists) {
+      console.warn('[Signup API] User already exists:', email);
       return res.status(400).json({ error: 'User already exists' });
     }
 
     // Create user
+    console.log('[Signup API] Creating user in DB...');
     const user = await User.create({
       name,
       email,
@@ -35,6 +40,7 @@ exports.signup = async (req, res) => {
     });
 
     if (user) {
+      console.log('[Signup API] User created successfully! ID:', user._id);
       res.status(201).json({
         _id: user._id,
         name: user.name,
@@ -48,6 +54,7 @@ exports.signup = async (req, res) => {
         token: generateToken(user._id)
       });
     } else {
+      console.warn('[Signup API] Invalid user data structure');
       res.status(400).json({ error: 'Invalid user data' });
     }
   } catch (error) {
@@ -202,4 +209,13 @@ exports.resetPassword = async (req, res) => {
     console.error('[Reset Password Error]:', error.message);
     res.status(500).json({ error: error.message });
   }
+};
+
+// @desc    Get public auth config keys (like CAPTCHA site key)
+// @route   GET /api/auth/config
+// @access  Public
+exports.getAuthConfig = (req, res) => {
+  res.json({
+    turnstileSiteKey: (process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA').trim()
+  });
 };

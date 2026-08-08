@@ -8,6 +8,7 @@ const { protect } = require('../middleware/auth');
 const { verifyCaptcha } = require('../middleware/captcha');
 
 // Public Authentication Routes
+router.get('/auth/config', authController.getAuthConfig);
 router.post('/auth/signup', verifyCaptcha, authController.signup);
 router.post('/auth/login', verifyCaptcha, authController.login);
 router.post('/auth/forgot-password', authController.forgotPassword);

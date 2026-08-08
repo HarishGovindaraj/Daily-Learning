@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, Form, Input, Button, Alert, Typography, Space, message } from 'antd';
 import { MailOutlined, LockOutlined, LoginOutlined } from '@ant-design/icons';
@@ -12,6 +12,19 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [captchaToken, setCaptchaToken] = useState('');
+  const [siteKey, setSiteKey] = useState('');
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const config = await api.getAuthConfig();
+        setSiteKey(config.turnstileSiteKey);
+      } catch (err) {
+        console.error('[Login] Failed to fetch Turnstile config:', err.message);
+      }
+    };
+    fetchConfig();
+  }, []);
 
   const onFinish = async (values) => {
     try {
@@ -66,6 +79,7 @@ export default function Login() {
           layout="vertical"
           onFinish={onFinish}
           requiredMark={false}
+          autoComplete="off"
         >
           <Form.Item
             name="email"
@@ -99,7 +113,7 @@ export default function Login() {
             <Link to="/forgot-password" style={{ color: '#4f46e5', fontSize: '0.85rem' }}>Forgot Password?</Link>
           </div>
 
-          <Turnstile onSuccess={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
+          <Turnstile siteKey={siteKey} onSuccess={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
 
           <Form.Item>
             <Button

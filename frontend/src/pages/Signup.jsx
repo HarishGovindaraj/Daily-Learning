@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Card, Form, Input, Button, Alert, Typography, message } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, PhoneOutlined, UserAddOutlined } from '@ant-design/icons';
@@ -12,6 +12,19 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [captchaToken, setCaptchaToken] = useState('');
+  const [siteKey, setSiteKey] = useState('');
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const config = await api.getAuthConfig();
+        setSiteKey(config.turnstileSiteKey);
+      } catch (err) {
+        console.error('[Signup] Failed to fetch Turnstile config:', err.message);
+      }
+    };
+    fetchConfig();
+  }, []);
 
   const onFinish = async (values) => {
     try {
@@ -56,6 +69,7 @@ export default function Signup() {
           layout="vertical"
           onFinish={onFinish}
           requiredMark={false}
+          autoComplete="off"
         >
           <Form.Item
             name="name"
@@ -66,6 +80,7 @@ export default function Signup() {
               placeholder="Full name"
               size="large"
               style={{ background: '#0b0f19', border: '1px solid #1e293b' }}
+              autoComplete="off"
             />
           </Form.Item>
 
@@ -81,6 +96,7 @@ export default function Signup() {
               placeholder="Email address"
               size="large"
               style={{ background: '#0b0f19', border: '1px solid #1e293b' }}
+              autoComplete="off"
             />
           </Form.Item>
 
@@ -96,6 +112,7 @@ export default function Signup() {
               placeholder="Password (min 6 characters)"
               size="large"
               style={{ background: '#0b0f19', border: '1px solid #1e293b' }}
+              autoComplete="new-password"
             />
           </Form.Item>
 
@@ -108,10 +125,11 @@ export default function Signup() {
               placeholder="Phone number (e.g. +919876543210)"
               size="large"
               style={{ background: '#0b0f19', border: '1px solid #1e293b' }}
+              autoComplete="off"
             />
           </Form.Item>
 
-          <Turnstile onSuccess={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
+          <Turnstile siteKey={siteKey} onSuccess={setCaptchaToken} onExpire={() => setCaptchaToken('')} />
 
           <Form.Item>
             <Button

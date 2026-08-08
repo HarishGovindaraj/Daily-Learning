@@ -28,6 +28,9 @@ const handleResponse = async (response) => {
 
 export const api = {
   // Authentication APIs
+  getAuthConfig: () => 
+    fetch(`${API_BASE_URL}/auth/config`).then(handleResponse),
+
   login: (email, password, captchaToken) => 
     fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
