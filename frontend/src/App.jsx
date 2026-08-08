@@ -56,7 +56,7 @@ function AppContent() {
     localStorage.removeItem('user');
     localStorage.removeItem('overallProgress');
     message.success('Logged out successfully.');
-    window.location.href = '/login';
+    window.location.href = '/';
   };
 
   const handleRoadmapChange = async (value) => {
