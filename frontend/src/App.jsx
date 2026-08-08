@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import { Layout, Menu, ConfigProvider, theme, Select, Button, message, Space, Tooltip } from 'antd';
-import { DashboardOutlined, SettingOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Layout, Menu, ConfigProvider, theme, Select, Button, message, Space, Tooltip, Drawer } from 'antd';
+import { DashboardOutlined, SettingOutlined, LogoutOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons';
 import Dashboard from './pages/Dashboard';
 import DayDetail from './pages/DayDetail';
 import Settings from './pages/Settings';
@@ -29,6 +29,16 @@ function AppContent() {
 
   const [progress, setProgress] = useState(0);
   const [activeRoadmap, setActiveRoadmap] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -110,99 +120,202 @@ function AppContent() {
     <Layout style={{ minHeight: '100vh' }}>
       <Header style={{ padding: '0 24px', height: 64 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', height: '100%' }}>
-          <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', marginRight: 30, textDecoration: 'none' }}>
-              <span style={{ fontSize: '1.5rem', marginRight: 8 }}>📚</span>
-              <span
-                className="gradient-text"
-                style={{
-                  fontFamily: 'Outfit',
-                  fontWeight: 800,
-                  fontSize: '1.25rem',
-                  letterSpacing: '-0.02em'
-                }}
-              >
-                Roadmap Tracker
-              </span>
-            </Link>
-            <Menu
-              theme="dark"
-              mode="horizontal"
-              defaultSelectedKeys={['dashboard']}
-              style={{ minWidth: 200, background: 'transparent', borderBottom: 'none' }}
-              items={[
-                {
-                  key: 'dashboard',
-                  icon: <DashboardOutlined />,
-                  label: <Link to="/">Dashboard</Link>,
-                },
-                {
-                  key: 'settings',
-                  icon: <SettingOutlined />,
-                  label: <Link to="/settings">Settings</Link>,
-                }
-              ]}
-            />
-          </div>
-
-          <Space size="middle" style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', color: '#94a3b8' }}>
-              <span style={{ marginRight: 8, fontSize: '0.85rem' }}>Active Syllabus:</span>
-              {progress < 100 && !!activeRoadmap ? (
-                <Tooltip title="Once selected, you cannot modify your syllabus path until it is 100% completed!">
-                  <span style={{
-                    color: '#f8fafc',
-                    fontWeight: 700,
-                    fontSize: '0.9rem',
-                    background: '#1e293b',
-                    padding: '4px 12px',
-                    borderRadius: '8px',
-                    border: '1px solid #334155',
-                    cursor: 'not-allowed',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 6
-                  }}>
-                    🔒 {getRoadmapLabel(activeRoadmap)}
-                  </span>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Choose your active roadmap syllabus path.">
-                  <Select
-                    value={activeRoadmap || undefined}
-                    placeholder="Select Path"
-                    onChange={handleRoadmapChange}
-                    style={{ width: 180 }}
-                    options={[
-                      { value: 'data-engineering', label: 'Data Engineering' },
-                      { value: 'full-stack', label: 'Full Stack' },
-                      { value: 'java', label: 'Java Developer' },
-                      { value: 'flutter', label: 'Flutter Developer' }
-                    ]}
-                    dropdownStyle={{ background: '#111827' }}
-                  />
-                </Tooltip>
-              )}
-            </div>
-
-            <div style={{ color: '#e2e8f0', display: 'flex', alignItems: 'center', fontSize: '0.9rem' }}>
-              <UserOutlined style={{ marginRight: 6, color: '#4f46e5' }} />
-              <span>{user.name}</span>
-            </div>
-
-            <Button
-              type="text"
-              icon={<LogoutOutlined />}
-              onClick={handleLogout}
-              style={{ color: '#ef4444' }}
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <span style={{ fontSize: '1.5rem', marginRight: 8 }}>📚</span>
+            <span
+              className="gradient-text"
+              style={{
+                fontFamily: 'Outfit',
+                fontWeight: 800,
+                fontSize: '1.25rem',
+                letterSpacing: '-0.02em'
+              }}
             >
-              Logout
-            </Button>
-          </Space>
+              Roadmap Tracker
+            </span>
+          </Link>
+
+          {!isMobile ? (
+            <>
+              <div style={{ display: 'flex', alignItems: 'center', flex: 1, marginLeft: 30 }}>
+                <Menu
+                  theme="dark"
+                  mode="horizontal"
+                  selectedKeys={[window.location.pathname === '/settings' ? 'settings' : 'dashboard']}
+                  style={{ minWidth: 200, background: 'transparent', borderBottom: 'none' }}
+                  items={[
+                    {
+                      key: 'dashboard',
+                      icon: <DashboardOutlined />,
+                      label: <Link to="/">Dashboard</Link>,
+                    },
+                    {
+                      key: 'settings',
+                      icon: <SettingOutlined />,
+                      label: <Link to="/settings">Settings</Link>,
+                    }
+                  ]}
+                />
+              </div>
+
+              <Space size="middle" style={{ display: 'flex', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', color: '#94a3b8' }}>
+                  <span style={{ marginRight: 8, fontSize: '0.85rem' }}>Active Syllabus:</span>
+                  {progress < 100 && !!activeRoadmap ? (
+                    <Tooltip title="Once selected, you cannot modify your syllabus path until it is 100% completed!">
+                      <span style={{
+                        color: '#f8fafc',
+                        fontWeight: 700,
+                        fontSize: '0.9rem',
+                        background: '#1e293b',
+                        padding: '4px 12px',
+                        borderRadius: '8px',
+                        border: '1px solid #334155',
+                        cursor: 'not-allowed',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6
+                      }}>
+                        🔒 {getRoadmapLabel(activeRoadmap)}
+                      </span>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Choose your active roadmap syllabus path.">
+                      <Select
+                        value={activeRoadmap || undefined}
+                        placeholder="Select Path"
+                        onChange={handleRoadmapChange}
+                        style={{ width: 180 }}
+                        options={[
+                          { value: 'data-engineering', label: 'Data Engineering' },
+                          { value: 'full-stack', label: 'Full Stack' },
+                          { value: 'java', label: 'Java Developer' },
+                          { value: 'flutter', label: 'Flutter Developer' }
+                        ]}
+                        dropdownStyle={{ background: '#111827' }}
+                      />
+                    </Tooltip>
+                  )}
+                </div>
+
+                <div style={{ color: '#e2e8f0', display: 'flex', alignItems: 'center', fontSize: '0.9rem' }}>
+                  <UserOutlined style={{ marginRight: 6, color: '#4f46e5' }} />
+                  <span>{user.name}</span>
+                </div>
+
+                <Button
+                  type="text"
+                  icon={<LogoutOutlined />}
+                  onClick={handleLogout}
+                  style={{ color: '#ef4444' }}
+                >
+                  Logout
+                </Button>
+              </Space>
+            </>
+          ) : (
+            <>
+              <Button
+                type="text"
+                icon={<MenuOutlined style={{ fontSize: '1.25rem', color: '#fff' }} />}
+                onClick={() => setDrawerVisible(true)}
+              />
+              <Drawer
+                title={
+                  <div style={{ display: 'flex', alignItems: 'center', color: '#fff' }}>
+                    <span style={{ fontSize: '1.25rem', marginRight: 8 }}>📚</span>
+                    <span>Roadmap Menu</span>
+                  </div>
+                }
+                placement="right"
+                onClose={() => setDrawerVisible(false)}
+                open={drawerVisible}
+                headerStyle={{ background: '#0b0f19', borderBottom: '1px solid #1e293b' }}
+                bodyStyle={{ background: '#111827', padding: '24px 0' }}
+              >
+                <Menu
+                  theme="dark"
+                  mode="vertical"
+                  selectedKeys={[window.location.pathname === '/settings' ? 'settings' : 'dashboard']}
+                  style={{ background: 'transparent', borderRight: 'none', marginBottom: 24 }}
+                  onClick={() => setDrawerVisible(false)}
+                  items={[
+                    {
+                      key: 'dashboard',
+                      icon: <DashboardOutlined />,
+                      label: <Link to="/">Dashboard</Link>,
+                    },
+                    {
+                      key: 'settings',
+                      icon: <SettingOutlined />,
+                      label: <Link to="/settings">Settings</Link>,
+                    }
+                  ]}
+                />
+
+                <div style={{ padding: '0 24px', marginBottom: 32 }}>
+                  <div style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: 8 }}>Active Syllabus:</div>
+                  {progress < 100 && !!activeRoadmap ? (
+                    <Tooltip title="Once selected, you cannot modify your syllabus path until it is 100% completed!">
+                      <span style={{
+                        color: '#f8fafc',
+                        fontWeight: 700,
+                        fontSize: '0.9rem',
+                        background: '#1e293b',
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        border: '1px solid #334155',
+                        cursor: 'not-allowed',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        width: '100%',
+                        justifyContent: 'center'
+                      }}>
+                        🔒 {getRoadmapLabel(activeRoadmap)}
+                      </span>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Choose your active roadmap syllabus path.">
+                      <Select
+                        value={activeRoadmap || undefined}
+                        placeholder="Select Path"
+                        onChange={(val) => { handleRoadmapChange(val); setDrawerVisible(false); }}
+                        style={{ width: '100%' }}
+                        options={[
+                          { value: 'data-engineering', label: 'Data Engineering' },
+                          { value: 'full-stack', label: 'Full Stack' },
+                          { value: 'java', label: 'Java Developer' },
+                          { value: 'flutter', label: 'Flutter Developer' }
+                        ]}
+                        dropdownStyle={{ background: '#111827' }}
+                      />
+                    </Tooltip>
+                  )}
+                </div>
+
+                <div style={{ borderTop: '1px solid #1e293b', paddingTop: 24, padding: '0 24px' }}>
+                  <div style={{ color: '#e2e8f0', display: 'flex', alignItems: 'center', fontSize: '0.95rem', marginBottom: 20 }}>
+                    <UserOutlined style={{ marginRight: 8, color: '#4f46e5', fontSize: '1.1rem' }} />
+                    <span>{user.name}</span>
+                  </div>
+                  <Button
+                    type="primary"
+                    danger
+                    icon={<LogoutOutlined />}
+                    onClick={() => { handleLogout(); setDrawerVisible(false); }}
+                    style={{ width: '100%', borderRadius: 8 }}
+                  >
+                    Logout
+                  </Button>
+                </div>
+              </Drawer>
+            </>
+          )}
         </div>
       </Header>
 
-      <Content style={{ padding: '32px 24px', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+      <Content style={{ padding: isMobile ? '24px 16px' : '32px 24px', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/day/:dayNumber" element={<DayDetail />} />
