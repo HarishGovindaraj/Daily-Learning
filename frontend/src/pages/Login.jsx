@@ -16,7 +16,7 @@ export default function Login() {
       setLoading(true);
       setError(null);
       const data = await api.login(values.email, values.password);
-      
+
       // Save credentials in localStorage
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify({
@@ -43,7 +43,7 @@ export default function Login() {
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <span style={{ fontSize: '3rem' }}>📚</span>
           <Title level={3} style={{ marginTop: 12, fontWeight: 800 }}>Sign In</Title>
-          <Text type="secondary">DE 45-Day Roadmap Tracker</Text>
+          <Text type="secondary">45-Day Roadmap Tracker</Text>
         </div>
 
         {error && (
@@ -68,9 +68,9 @@ export default function Login() {
               { type: 'email', message: 'Please enter a valid email!' }
             ]}
           >
-            <Input 
-              prefix={<MailOutlined style={{ color: '#8c8c8c' }} />} 
-              placeholder="Email address" 
+            <Input
+              prefix={<MailOutlined style={{ color: '#8c8c8c' }} />}
+              placeholder="Email address"
               size="large"
               style={{ background: '#0b0f19', border: '1px solid #1e293b' }}
             />
@@ -94,9 +94,9 @@ export default function Login() {
           </div>
 
           <Form.Item>
-            <Button 
-              type="primary" 
-              htmlType="submit" 
+            <Button
+              type="primary"
+              htmlType="submit"
               size="large"
               loading={loading}
               icon={<LoginOutlined />}
