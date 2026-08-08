@@ -1,0 +1,117 @@
+/* Premium CSS styling for Data Engineering Roadmap */
+
+:root {
+  --primary-color: #4f46e5;
+  --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+  --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --inprogress-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  --skipped-gradient: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  --font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family);
+  background-color: #0b0f19;
+  color: #f8fafc;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Modern Card Glows & Hover Effects */
+.roadmap-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: 1px solid #1e293b !important;
+  background: #111827 !important;
+}
+
+.roadmap-card:hover {
+  transform: translateY(-4px);
+  border-color: #4f46e5 !important;
+  box-shadow: 0 12px 20px -8px rgba(79, 70, 229, 0.3);
+}
+
+.status-badge {
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+/* Grid & Layout Utilities */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.progress-banner {
+  background: linear-gradient(135deg, #111827 0%, #0b0f19 100%);
+  border: 1px solid #1e293b;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Antd override styles for premium feel */
+.ant-layout-header {
+  background: rgba(11, 15, 25, 0.8) !important;
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #1e293b;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ant-layout {
+  background: #0b0f19 !important;
+}
+
+.ant-menu {
+  background: transparent !important;
+  border-bottom: none !important;
+}
+
+.ant-typography {
+  color: #f8fafc !important;
+}
+
+.ant-card-actions {
+  background: rgba(17, 24, 39, 0.8) !important;
+  border-top: 1px solid #1e293b !important;
+}
+
+.ant-card-actions > li {
+  border-inline-end: 1px solid #1e293b !important;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
