@@ -1,27 +1,36 @@
 const express = require('express');
 const router = express.Router();
+const authController = require('../controllers/authController');
 const roadmapController = require('../controllers/roadmapController');
 const settingsController = require('../controllers/settingsController');
 const notificationController = require('../controllers/notificationController');
+const { protect } = require('../middleware/auth');
 
-// Roadmap endpoints
-router.get('/roadmap', roadmapController.getAllDays);
-router.get('/roadmap/:dayNumber', roadmapController.getDayByNumber);
-router.put('/roadmap/:dayNumber', roadmapController.updateDay);
-router.post('/roadmap/:dayNumber/start', roadmapController.startDay);
-router.post('/roadmap/:dayNumber/complete', roadmapController.completeDay);
-router.put('/roadmap/:dayNumber/tasks/:taskId', roadmapController.updateTask);
-router.put('/roadmap/:dayNumber/notes', roadmapController.updateNotes);
+// Public Authentication Routes
+router.post('/auth/signup', authController.signup);
+router.post('/auth/login', authController.login);
+router.post('/auth/forgot-password', authController.forgotPassword);
+router.post('/auth/reset-password', authController.resetPassword);
 
-// Dashboard endpoint
-router.get('/dashboard', roadmapController.getDashboardData);
+// Protected Roadmap Routes
+router.get('/roadmap', protect, roadmapController.getAllDays);
+router.get('/roadmap/:dayNumber', protect, roadmapController.getDayByNumber);
+router.put('/roadmap/:dayNumber', protect, roadmapController.updateDay);
+router.post('/roadmap/:dayNumber/start', protect, roadmapController.startDay);
+router.post('/roadmap/:dayNumber/complete', protect, roadmapController.completeDay);
+router.put('/roadmap/:dayNumber/tasks/:taskId', protect, roadmapController.updateTask);
+router.put('/roadmap/:dayNumber/notes', protect, roadmapController.updateNotes);
+router.post('/roadmap/select', protect, roadmapController.selectRoadmap);
 
-// Settings endpoints
-router.get('/settings', settingsController.getSettings);
-router.put('/settings', settingsController.updateSettings);
+// Protected Dashboard Route
+router.get('/dashboard', protect, roadmapController.getDashboardData);
 
-// Test notification endpoints
-router.post('/notifications/test-email', notificationController.sendTestEmail);
-router.post('/notifications/test-sms', notificationController.sendTestSMS);
+// Protected Settings Routes
+router.get('/settings', protect, settingsController.getSettings);
+router.put('/settings', protect, settingsController.updateSettings);
+
+// Protected Test Notification Routes
+router.post('/notifications/test-email', protect, notificationController.sendTestEmail);
+router.post('/notifications/test-sms', protect, notificationController.sendTestSMS);
 
 module.exports = router;

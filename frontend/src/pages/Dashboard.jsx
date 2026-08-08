@@ -15,7 +15,8 @@ import {
   Spin, 
   Alert, 
   Tooltip,
-  Typography
+  Typography,
+  message
 } from 'antd';
 import { 
   SearchOutlined, 
@@ -65,6 +66,7 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'calendar'
+  const [noActiveRoadmap, setNoActiveRoadmap] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -77,8 +79,26 @@ export default function Dashboard() {
       setTodayDayNum(dashData.todayDayNumber);
       setContinueDayNum(dashData.continueDayNumber);
 
-      const roadmapData = await api.getRoadmap();
-      setRoadmap(roadmapData);
+      if (dashData.noActiveRoadmap) {
+        setNoActiveRoadmap(true);
+        setRoadmap([]);
+        localStorage.setItem('overallProgress', '0');
+        window.dispatchEvent(new Event('storage'));
+      } else {
+        setNoActiveRoadmap(false);
+        localStorage.setItem('overallProgress', dashData.stats.overallProgress.toString());
+        window.dispatchEvent(new Event('storage'));
+        
+        // Sync local user settings
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.activeRoadmap !== dashData.activeRoadmap) {
+          user.activeRoadmap = dashData.activeRoadmap;
+          localStorage.setItem('user', JSON.stringify(user));
+        }
+
+        const roadmapData = await api.getRoadmap();
+        setRoadmap(roadmapData);
+      }
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
       setError(err.message || 'Failed to connect to backend server. Make sure MongoDB and backend are running.');
@@ -195,8 +215,147 @@ export default function Dashboard() {
 
   const filteredDays = getFilteredDays();
 
+  const handleSelectRoadmap = async (type) => {
+    try {
+      setLoading(true);
+      await api.selectRoadmap(type);
+      
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      user.activeRoadmap = type;
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('overallProgress', '0'); // Set new progress to 0
+      
+      message.success(`Awesome! You have selected the ${getRoadmapLabel(type)} learning path.`);
+      window.location.reload(); // Reload page to update header locked status immediately
+    } catch (err) {
+      message.error(err.message || 'Failed to select roadmap');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getRoadmapLabel = (val) => {
+    const map = {
+      'data-engineering': 'Data Engineering',
+      'full-stack': 'Full Stack',
+      'java': 'Java Developer',
+      'flutter': 'Flutter Developer'
+    };
+    return map[val] || val;
+  };
+
+  if (noActiveRoadmap) {
+    return (
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '20px 0' }}>
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+          <span style={{ fontSize: '3.5rem' }}>🎯</span>
+          <Title level={2} style={{ marginTop: 16, fontWeight: 800 }}>Welcome! Choose Your Learning Path</Title>
+          <Paragraph type="secondary" style={{ fontSize: '1.1rem' }}>
+            Select a roadmap to begin your structured 45-day learning journey. 
+            <br />
+            <span style={{ color: '#f59e0b', fontWeight: 600 }}>Note:</span> Once selected, you cannot change your roadmap until it is 100% completed!
+          </Paragraph>
+        </div>
+
+        <Row gutter={[24, 24]}>
+          {[
+            {
+              id: 'data-engineering',
+              title: 'Data Engineering',
+              emoji: '📊',
+              description: 'Master SQL, Python, PySpark, Delta Lake, and Databricks. Perfect for building massive cloud analytical architectures.',
+              color: '#3b82f6'
+            },
+            {
+              id: 'full-stack',
+              title: 'Full Stack Web',
+              emoji: '💻',
+              description: 'Learn modern Web Dev from HTML/CSS to React, Node.js, Express, databases, and secure Docker deployments.',
+              color: '#10b981'
+            },
+            {
+              id: 'java',
+              title: 'Java Developer',
+              emoji: '☕',
+              description: 'Master Core Java, Object Oriented programming, Maven, Spring Boot, JPA, Rest APIs, and Microservices patterns.',
+              color: '#ec4899'
+            },
+            {
+              id: 'flutter',
+              title: 'Flutter Developer',
+              emoji: '📱',
+              description: 'Build native multi-platform apps using Dart, widgets layout grids, state management (Bloc/Riverpod), and Firebase.',
+              color: '#06b6d4'
+            }
+          ].map((item) => (
+            <Col xs={24} sm={12} key={item.id}>
+              <Card 
+                hoverable 
+                className="roadmap-card"
+                style={{ 
+                  height: '100%', 
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  border: '1px solid #1e293b',
+                  borderRadius: 16
+                }}
+                bodyStyle={{ display: 'flex', flexDirection: 'column', height: '100%', padding: 24 }}
+              >
+                <div style={{ fontSize: '3rem', marginBottom: 12 }}>{item.emoji}</div>
+                <Title level={4} style={{ margin: '0 0 8px 0', fontWeight: 700 }}>{item.title}</Title>
+                <Paragraph type="secondary" style={{ flex: 1, fontSize: '0.9rem', marginBottom: 20 }}>
+                  {item.description}
+                </Paragraph>
+                <Button 
+                  type="primary" 
+                  size="large"
+                  onClick={() => handleSelectRoadmap(item.id)}
+                  style={{ 
+                    marginTop: 'auto', 
+                    background: item.color, 
+                    border: 'none', 
+                    borderRadius: 8,
+                    fontWeight: 600
+                  }}
+                >
+                  Start This Path
+                </Button>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </div>
+    );
+  }
+
   return (
     <div>
+      {stats.overallProgress === 100 && (
+        <Alert
+          message={
+            <div style={{ fontWeight: 800, fontSize: '1.05rem' }}>
+              🎓 Congratulations! You have fully completed the {getRoadmapLabel(JSON.parse(localStorage.getItem('user') || '{}').activeRoadmap)} Roadmap!
+            </div>
+          }
+          description={
+            <div style={{ marginTop: 8 }}>
+              <span>You have completed all checklist modules. You are now unlocked to start a new learning journey. Click the button below to choose another track!</span>
+              <div style={{ marginTop: 12 }}>
+                <Button 
+                  type="primary" 
+                  onClick={() => setNoActiveRoadmap(true)}
+                  style={{ background: 'var(--primary-gradient)', border: 'none' }}
+                >
+                  Choose New Learning Path
+                </Button>
+              </div>
+            </div>
+          }
+          type="success"
+          showIcon
+          style={{ marginBottom: 24, borderRadius: 16, border: '1px solid rgba(16, 185, 129, 0.4)' }}
+        />
+      )}
       {/* Overall Progress Banner */}
       <div className="progress-banner">
         <Row gutter={[24, 24]} align="middle">
@@ -221,20 +380,20 @@ export default function Dashboard() {
           <Col xs={24} sm={12} md={8}>
             <Row gutter={[16, 16]}>
               <Col span={12}>
-                <Statistic title="Completed" value={stats.completed} suffix="/ 45" valueStyle={{ color: '#10b981', fontWeight: 700 }} />
+                <Statistic title="Completed" value={stats.completed} suffix={`/ ${stats.totalDays || 45}`} valueStyle={{ color: '#10b981', fontWeight: 700 }} />
               </Col>
               <Col span={12}>
-                <Statistic title="In Progress" value={stats.inProgress} suffix="/ 45" valueStyle={{ color: '#3b82f6', fontWeight: 700 }} />
+                <Statistic title="In Progress" value={stats.inProgress} suffix={`/ ${stats.totalDays || 45}`} valueStyle={{ color: '#3b82f6', fontWeight: 700 }} />
               </Col>
             </Row>
           </Col>
           <Col xs={24} sm={12} md={8}>
             <Row gutter={[16, 16]}>
               <Col span={12}>
-                <Statistic title="Remaining" value={stats.todo} suffix="/ 45" valueStyle={{ color: '#d97706', fontWeight: 700 }} />
+                <Statistic title="Remaining" value={stats.todo} suffix={`/ ${stats.totalDays || 45}`} valueStyle={{ color: '#d97706', fontWeight: 700 }} />
               </Col>
               <Col span={12}>
-                <Statistic title="Skipped" value={stats.skipped} suffix="/ 45" valueStyle={{ color: '#64748b', fontWeight: 700 }} />
+                <Statistic title="Skipped" value={stats.skipped} suffix={`/ ${stats.totalDays || 45}`} valueStyle={{ color: '#64748b', fontWeight: 700 }} />
               </Col>
             </Row>
           </Col>
@@ -362,10 +521,10 @@ export default function Dashboard() {
                 </p>
                 <Alert 
                   message={
-                    todayDayNum >= 1 && todayDayNum <= 45 
-                      ? `You are on Day ${todayDayNum} of 45.` 
-                      : todayDayNum > 45 
-                      ? "Congratulations! You have completed the 45-day cycle."
+                    todayDayNum >= 1 && todayDayNum <= (stats.totalDays || 45)
+                      ? `You are on Day ${todayDayNum} of ${stats.totalDays || 45}.` 
+                      : todayDayNum > (stats.totalDays || 45)
+                      ? `Congratulations! You have completed the ${stats.totalDays || 45}-day cycle.`
                       : `Roadmap has not started yet. Starts in ${Math.abs(todayDayNum - 1)} days.`
                   }
                   type="info"
@@ -418,7 +577,7 @@ export default function Dashboard() {
           /* Calendar view displaying all 45 days in a 9x5 block grid */
           <div style={{ padding: '12px 0' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(9, 1fr)', gap: 12 }} className="calendar-grid-layout">
-              {Array.from({ length: 45 }, (_, i) => i + 1).map(dayNum => (
+              {Array.from({ length: stats.totalDays || 45 }, (_, i) => i + 1).map(dayNum => (
                 <div key={dayNum}>
                   {renderCalendarDay(dayNum)}
                 </div>

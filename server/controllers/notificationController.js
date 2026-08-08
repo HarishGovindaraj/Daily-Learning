@@ -1,15 +1,12 @@
 const User = require('../models/user');
 const NotificationLog = require('../models/notificationLog');
 const { sendEmail } = require('../services/emailService');
-const { sendSMS } = require('../services/smsService');
 
 // POST /api/notifications/test-email
 exports.sendTestEmail = async (req, res) => {
   try {
-    const user = await User.findOne();
-    if (!user) {
-      return res.status(404).json({ error: 'User settings not found' });
-    }
+    // req.user is attached by the auth middleware
+    const user = req.user;
 
     const testSubject = '📚 Data Engineering Roadmap — Test Email';
     const testHtml = `
@@ -22,8 +19,9 @@ exports.sendTestEmail = async (req, res) => {
           <li><strong>Recipient Email:</strong> ${user.email}</li>
           <li><strong>Timezone:</strong> ${user.timezone}</li>
           <li><strong>Daily Reminder:</strong> ${user.reminderTime}</li>
+          <li><strong>Active Learning Path:</strong> ${user.activeRoadmap}</li>
         </ul>
-        <p>You will receive daily learning reminders at 8:00 PM (or your configured time) if the active day is not marked as COMPLETED.</p>
+        <p>You will receive daily learning reminders at your configured time if the active day is not marked as COMPLETED.</p>
         <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;"/>
         <p style="font-size: 0.85em; color: #888; text-align: center;">— Data Engineering Roadmap</p>
       </div>
@@ -40,7 +38,7 @@ exports.sendTestEmail = async (req, res) => {
     // Log the successful test notification
     await NotificationLog.create({
       userId: user._id,
-      dayNumber: 0, // Using 0 for tests
+      dayNumber: 0, 
       type: 'EMAIL',
       status: 'SUCCESS',
       message: `Test email sent successfully to ${user.email}. ${result.mocked ? '(MOCK)' : ''}`
@@ -54,11 +52,9 @@ exports.sendTestEmail = async (req, res) => {
   } catch (error) {
     console.error('[Test Email Error]:', error);
     
-    // Log the failed test notification
     try {
-      const user = await User.findOne();
       await NotificationLog.create({
-        userId: user ? user._id : null,
+        userId: req.user ? req.user._id : null,
         dayNumber: 0,
         type: 'EMAIL',
         status: 'FAILED',

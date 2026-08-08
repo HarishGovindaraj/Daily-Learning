@@ -1,21 +1,11 @@
 const User = require('../models/user');
-const { rescheduleReminderJob } = require('../jobs/reminderJob');
 
 // GET /api/settings
 exports.getSettings = async (req, res) => {
   try {
-    let user = await User.findOne();
+    const user = await User.findById(req.user._id).select('-password');
     if (!user) {
-      user = await User.create({
-        name: 'Harish',
-        email: [EMAIL_ADDRESS],
-        phoneNumber: [USER_PHONE_NUMBER],
-        timezone: 'Asia/Kolkata',
-        reminderTime: '08:30 PM',
-        emailReminderEnabled: true,
-        smsReminderEnabled: false,
-        roadmapStartDate: new Date().toISOString().split('T')[0]
-      });
+      return res.status(404).json({ error: 'User settings not found' });
     }
     res.json(user);
   } catch (error) {
@@ -26,9 +16,9 @@ exports.getSettings = async (req, res) => {
 // PUT /api/settings
 exports.updateSettings = async (req, res) => {
   try {
-    let user = await User.findOne();
+    const user = await User.findById(req.user._id);
     if (!user) {
-      user = new User();
+      return res.status(404).json({ error: 'User settings not found' });
     }
 
     const {
@@ -53,12 +43,20 @@ exports.updateSettings = async (req, res) => {
 
     await user.save();
 
-    // Trigger rescheduling of the cron job
-    rescheduleReminderJob(user.reminderTime, user.timezone);
-
     res.json({
       message: 'Settings updated successfully',
-      settings: user
+      settings: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        timezone: user.timezone,
+        reminderTime: user.reminderTime,
+        emailReminderEnabled: user.emailReminderEnabled,
+        smsReminderEnabled: user.smsReminderEnabled,
+        roadmapStartDate: user.roadmapStartDate,
+        activeRoadmap: user.activeRoadmap
+      }
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -1,10 +1,11 @@
 const cron = require('node-cron');
 const moment = require('moment-timezone');
 const User = require('../models/user');
-const RoadmapDay = require('../models/roadmapDay');
+const UserProgress = require('../models/userProgress');
+const RoadmapTemplate = require('../models/roadmapTemplate');
 const { sendDailyReminder } = require('../services/notificationService');
 
-let scheduledJob = null;
+let schedulerCronJob = null;
 
 /**
  * Calculates current roadmap day based on start date.
@@ -18,114 +19,108 @@ const getCurrentRoadmapDayNumber = (startDateStr, timezone) => {
 };
 
 /**
- * The reminder logic check executed by the cron.
+ * Checks all users and fires reminders if the current time matches their reminderTime.
+ * Runs every minute in background.
  */
-const runReminderJob = async () => {
+const checkAndSendReminders = async () => {
   try {
-    console.log('[Scheduler] Running scheduled reminder check...');
-    const user = await User.findOne();
-    if (!user) {
-      console.log('[Scheduler] No settings/user found, skipping check.');
-      return;
+    const users = await User.find({
+      $or: [
+        { emailReminderEnabled: true },
+        { smsReminderEnabled: true }
+      ]
+    });
+
+    for (const user of users) {
+      const tz = user.timezone || 'Asia/Kolkata';
+      
+      // Get current local time formatted (e.g., "08:30 PM" or "08:00 PM")
+      const localNowTime = moment().tz(tz).format('hh:mm A');
+      
+      // Compare user's configured reminderTime with local current time
+      if (localNowTime !== user.reminderTime) {
+        continue; // Not the user's scheduled time
+      }
+
+      console.log(`[Scheduler] Firing reminder check for user: ${user.name} (${user.email})`);
+
+      const dayNumber = getCurrentRoadmapDayNumber(user.roadmapStartDate, tz);
+      
+      // Templates are typically 1-45 days
+      if (dayNumber < 1 || dayNumber > 45) {
+        console.log(`[Scheduler] User ${user.name} is on Day ${dayNumber}. Out of bounds (1-45). Skipping.`);
+        continue;
+      }
+
+      // Check if user has progress logged
+      const progress = await UserProgress.findOne({
+        userId: user._id,
+        roadmapType: user.activeRoadmap,
+        dayNumber
+      });
+
+      if (progress && progress.status === 'COMPLETED') {
+        console.log(`[Scheduler] User ${user.name} has already completed Day ${dayNumber}. Skipping.`);
+        continue;
+      }
+
+      // Load target curriculum template
+      const template = await RoadmapTemplate.findOne({
+        roadmapType: user.activeRoadmap,
+        dayNumber
+      });
+
+      if (!template) {
+        console.log(`[Scheduler] Roadmap template for ${user.activeRoadmap} Day ${dayNumber} not found.`);
+        continue;
+      }
+
+      // Construct merged day data structure for reminder service
+      const mockDay = {
+        dayNumber,
+        topic: template.topic,
+        tasks: template.tasks.map(title => {
+          const userTask = progress ? progress.tasks.find(t => t.title === title) : null;
+          return {
+            title,
+            completed: userTask ? userTask.completed : false
+          };
+        })
+      };
+
+      console.log(`[Scheduler] Sending daily email reminders to ${user.email} for Day ${dayNumber}`);
+      await sendDailyReminder(user, mockDay);
     }
-
-    const timezone = user.timezone || 'Asia/Kolkata';
-    const dayNumber = getCurrentRoadmapDayNumber(user.roadmapStartDate, timezone);
-
-    console.log(`[Scheduler] Today is day number: ${dayNumber}`);
-
-    if (dayNumber < 1 || dayNumber > 45) {
-      console.log(`[Scheduler] Day number ${dayNumber} is out of bounds (1-45). Reminder skipped.`);
-      return;
-    }
-
-    const day = await RoadmapDay.findOne({ dayNumber });
-    if (!day) {
-      console.log(`[Scheduler] Roadmap day ${dayNumber} not found in database.`);
-      return;
-    }
-
-    if (day.status === 'COMPLETED') {
-      console.log(`[Scheduler] Day ${dayNumber} is already COMPLETED. Reminder skipped.`);
-      return;
-    }
-
-    console.log(`[Scheduler] Day ${dayNumber} status is ${day.status}. Sending reminders.`);
-    await sendDailyReminder(user, day);
   } catch (error) {
-    console.error('[Scheduler] Error in scheduled reminder job:', error);
+    console.error('[Scheduler] Error checking/dispatching reminders:', error);
   }
 };
 
 /**
- * Helper to parse "08:00 PM" (or similar formats) into node-cron format "m h * * *"
- */
-const parseTimeToCron = (timeStr) => {
-  const regex = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i;
-  const match = timeStr.trim().match(regex);
-  if (!match) {
-    // Default fallback to 8:00 PM (20:00)
-    console.log(`[Scheduler] Failed to parse time string "${timeStr}". Defaulting to 8:00 PM.`);
-    return '0 20 * * *';
-  }
-
-  let hours = parseInt(match[1], 10);
-  const minutes = parseInt(match[2], 10);
-  const ampm = match[3].toUpperCase();
-
-  if (ampm === 'PM' && hours < 12) {
-    hours += 12;
-  } else if (ampm === 'AM' && hours === 12) {
-    hours = 0;
-  }
-
-  return `${minutes} ${hours} * * *`;
-};
-
-/**
- * Reschedule the active cron job.
- */
-const rescheduleReminderJob = (timeStr, timezone) => {
-  if (scheduledJob) {
-    console.log('[Scheduler] Stopping active reminder job...');
-    scheduledJob.stop();
-  }
-
-  const cronPattern = parseTimeToCron(timeStr);
-  const tz = timezone || 'Asia/Kolkata';
-
-  console.log(`[Scheduler] Scheduling daily reminder for: "${timeStr}" (${cronPattern}) in Timezone: "${tz}"`);
-
-  scheduledJob = cron.schedule(cronPattern, runReminderJob, {
-    scheduled: true,
-    timezone: tz
-  });
-};
-
-/**
- * Initialize scheduler with DB configuration on start.
+ * Setup and start the cron running every minute.
  */
 const initScheduler = async () => {
   try {
-    let user = await User.findOne();
-    if (!user) {
-      user = await User.create({
-        name: 'Student',
-        email: 'user@example.com',
-        phoneNumber: '+919876543210',
-        timezone: 'Asia/Kolkata',
-        reminderTime: '08:00 PM',
-        emailReminderEnabled: true,
-        smsReminderEnabled: true,
-        roadmapStartDate: moment().tz('Asia/Kolkata').format('YYYY-MM-DD')
-      });
-      console.log('[Scheduler] Created default user settings in DB.');
+    console.log('[Scheduler] Initializing global minute-level reminder cron job...');
+    
+    if (schedulerCronJob) {
+      schedulerCronJob.stop();
     }
 
-    rescheduleReminderJob(user.reminderTime, user.timezone);
+    // Run every minute: checks all users timezones
+    schedulerCronJob = cron.schedule('* * * * *', checkAndSendReminders, {
+      scheduled: true
+    });
+    
+    console.log('[Scheduler] Cron job active.');
   } catch (error) {
-    console.error('[Scheduler] Error during scheduler initialization:', error);
+    console.error('[Scheduler] Error starting cron daemon:', error);
   }
+};
+
+// Deprecated in multi-user mode, keeping empty function to prevent startup crashes
+const rescheduleReminderJob = () => {
+  console.log('[Scheduler] Dynamic rescheduling bypassed. Multi-user cron runs dynamically every minute.');
 };
 
 module.exports = {
