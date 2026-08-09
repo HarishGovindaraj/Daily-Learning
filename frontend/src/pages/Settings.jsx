@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Card, 
-  Form, 
-  Input, 
-  Switch, 
-  Button, 
-  Select, 
-  Row, 
-  Col, 
-  Spin, 
-  Alert, 
-  Divider, 
+import {
+  Card,
+  Form,
+  Input,
+  Switch,
+  Button,
+  Select,
+  Row,
+  Col,
+  Spin,
+  Alert,
+  Divider,
   message,
   Typography,
   DatePicker,
   Space,
   Tooltip
 } from 'antd';
-import { 
-  SaveOutlined, 
+import {
+  SaveOutlined,
   ClockCircleOutlined
 } from '@ant-design/icons';
 import { api } from '../services/api';
@@ -45,7 +45,7 @@ export default function Settings() {
       setLoading(true);
       setError(null);
       const data = await api.getSettings();
-      
+
       form.setFieldsValue({
         name: data.name,
         email: data.email,
@@ -75,7 +75,7 @@ export default function Settings() {
         ...values,
         roadmapStartDate: values.roadmapStartDate ? values.roadmapStartDate.format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD')
       };
-      
+
       await api.updateSettings(settingsData);
       message.success('Settings updated successfully!');
       fetchSettings();
@@ -176,7 +176,7 @@ export default function Settings() {
                 rules={[{ required: true, message: 'Please specify reminder time' }]}
                 tooltip="Format: HH:MM AM/PM (e.g. '08:30 PM')"
               >
-                <Input placeholder="E.g. 08:30 PM" style={{ background: '#0b0f19', border: '1px solid #1e293b' }} />
+                <Input placeholder="E.g. 08:30 PM" style={{ background: '#0b0f19', border: '1px solid #1e293b' }} disabled />
               </Form.Item>
             </Col>
             <Col xs={24} sm={12}>
@@ -218,10 +218,10 @@ export default function Settings() {
           </Row>
 
           <Form.Item style={{ marginTop: 16 }}>
-            <Button 
-              type="primary" 
-              htmlType="submit" 
-              icon={<SaveOutlined />} 
+            <Button
+              type="primary"
+              htmlType="submit"
+              icon={<SaveOutlined />}
               loading={saving}
               style={{ width: '100%', background: 'var(--primary-gradient)', border: 'none' }}
             >
