@@ -6,6 +6,45 @@ const nodemailer = require('nodemailer');
  * If isTest is true, it throws an error if credentials are missing to give feedback to the user.
  */
 const sendEmail = async ({ to, subject, html, isTest = false }) => {
+  // If BREVO_API_KEY is configured, use Brevo's HTTP API (port 443) which works on Render's free tier.
+  if (process.env.BREVO_API_KEY) {
+    try {
+      console.log(`[Email Service] Attempting to send email via Brevo API to ${to}...`);
+      const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'accept': 'application/json',
+          'api-key': process.env.BREVO_API_KEY.trim(),
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          sender: {
+            name: 'Roadmap Tracker',
+            email: process.env.SMTP_USER || 'mailtoharish0516@gmail.com'
+          },
+          to: [{ email: to }],
+          subject,
+          htmlContent: html
+        })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log(`[Email Service] Email sent successfully via Brevo to ${to}`);
+        return { success: true, info: data };
+      }
+      
+      console.warn(`[Email Service] Brevo API rejected request:`, data.message || data);
+      throw new Error(data.message || 'Brevo API error');
+    } catch (error) {
+      console.error(`[Email Service] Brevo API error sending to ${to}:`, error.message);
+      if (isTest && !process.env.SMTP_HOST) {
+        throw error;
+      }
+      console.warn('[Email Service] Falling back from Brevo...');
+    }
+  }
+
   // If RESEND_API_KEY is configured, use Resend's HTTP API (port 443) which is never blocked by cloud hosts.
   if (process.env.RESEND_API_KEY) {
     try {
