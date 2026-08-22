@@ -25,10 +25,12 @@ export default function Turnstile({ siteKey, onSuccess, onExpire }) {
       if (window.turnstile && containerRef.current) {
         try {
           isRenderedRef.current = true;
-          // Explicitly render Turnstile in our container ref
+          // Explicitly render Turnstile in our container ref with interactive forced options
           widgetId = window.turnstile.render(containerRef.current, {
             sitekey: siteKey,
             theme: 'dark', // Render with dark mode styling to match our theme!
+            appearance: 'always', // Always visibly display the checkbox
+            execution: 'render',
             callback: (token) => {
               if (onSuccess) onSuccess(token);
             },
