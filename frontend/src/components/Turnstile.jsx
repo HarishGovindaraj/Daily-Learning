@@ -36,9 +36,16 @@ export default function Turnstile({ siteKey, onSuccess, onExpire }) {
             },
             'expired-callback': () => {
               if (onExpire) onExpire();
+              if (window.turnstile && widgetId) {
+                window.turnstile.reset(widgetId);
+              }
             },
             'error-callback': () => {
               console.error('[Turnstile] Challenge error occurred.');
+              if (onExpire) onExpire();
+              if (window.turnstile && widgetId) {
+                window.turnstile.reset(widgetId);
+              }
             }
           });
         } catch (error) {
