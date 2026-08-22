@@ -34,5 +34,6 @@ router.put('/settings', protect, settingsController.updateSettings);
 // Protected Test Notification Routes
 router.post('/notifications/test-email', protect, notificationController.sendTestEmail);
 router.post('/notifications/test-sms', protect, notificationController.sendTestSMS);
+router.get('/notifications/brevo-logs', protect, notificationController.getBrevoLogsEndpoint);
 
 module.exports = router;

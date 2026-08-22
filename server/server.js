@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const { initScheduler } = require('./jobs/reminderJob');
+const { initLogCleanupJob } = require('./jobs/cleanupJob');
 const apiRoutes = require('./routes/api');
 
 const app = express();
@@ -36,4 +37,5 @@ app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
   // Initialize scheduler and load cron configs
   await initScheduler();
+  await initLogCleanupJob();
 });

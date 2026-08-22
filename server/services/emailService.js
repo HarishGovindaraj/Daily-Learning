@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const { logBrevoEmail } = require('./brevoLogService');
 
 /**
  * Send an email reminder.
@@ -31,13 +32,35 @@ const sendEmail = async ({ to, subject, html, isTest = false }) => {
       const data = await response.json();
       if (response.ok) {
         console.log(`[Email Service] Email sent successfully via Brevo to ${to}`);
+        const messageId = data.messageId || (data.messageIds && data.messageIds[0]) || 'N/A';
+        logBrevoEmail({
+          to,
+          subject,
+          status: 'SUCCESS',
+          messageId,
+          details: 'Dispatched via Brevo API'
+        });
         return { success: true, info: data };
       }
       
       console.warn(`[Email Service] Brevo API rejected request:`, data.message || data);
+      logBrevoEmail({
+        to,
+        subject,
+        status: 'FAILED',
+        error: data.message || JSON.stringify(data),
+        details: 'Brevo API rejected request'
+      });
       throw new Error(data.message || 'Brevo API error');
     } catch (error) {
       console.error(`[Email Service] Brevo API error sending to ${to}:`, error.message);
+      logBrevoEmail({
+        to,
+        subject,
+        status: 'ERROR',
+        error: error.message,
+        details: 'Brevo request failure'
+      });
       if (isTest && !process.env.SMTP_HOST) {
         throw error;
       }

@@ -79,3 +79,15 @@ exports.sendTestSMS = async (req, res) => {
     error: 'SMS reminder features are currently disabled/commented out by configuration.'
   });
 };
+
+// GET /api/notifications/brevo-logs
+const { getBrevoLogs } = require('../services/brevoLogService');
+exports.getBrevoLogsEndpoint = (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 100;
+    const logs = getBrevoLogs(limit);
+    res.json({ success: true, count: logs.length, logs });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
