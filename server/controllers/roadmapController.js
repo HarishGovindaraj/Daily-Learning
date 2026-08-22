@@ -263,20 +263,8 @@ exports.getDashboardData = async (req, res) => {
 
     const overallProgress = totalDays > 0 ? parseFloat(((completedCount / totalDays) * 100).toFixed(2)) : 0;
 
-    const todayDayNumber = getCurrentRoadmapDayNumber(req.user.roadmapStartDate, req.user.timezone);
-    
-    // Bound today's day number between 1 and totalDays
-    let searchDayNum = todayDayNumber;
-    if (searchDayNum < 1) searchDayNum = 1;
-    if (searchDayNum > totalDays) searchDayNum = totalDays;
-
-    const todayTemplate = templates.find(t => t.dayNumber === searchDayNum);
-    const todayProgress = progresses.find(p => p.dayNumber === searchDayNum);
-    
-    const todayDay = todayTemplate ? mergeTemplateWithProgress(todayTemplate, todayProgress) : null;
-
-    // Find the first incomplete day
-    let continueDayNumber = null;
+    // Find the first incomplete day (the next day the user should learn)
+    let continueDayNumber = 1;
     for (let template of templates) {
       const prog = progresses.find(p => p.dayNumber === template.dayNumber);
       if (!prog || (prog.status !== 'COMPLETED' && prog.status !== 'SKIPPED')) {
@@ -284,6 +272,13 @@ exports.getDashboardData = async (req, res) => {
         break;
       }
     }
+
+    // Target day displayed in Today's Target Learning card
+    const targetDayNum = continueDayNumber || 1;
+    const todayTemplate = templates.find(t => t.dayNumber === targetDayNum);
+    const todayProgress = progresses.find(p => p.dayNumber === targetDayNum);
+    
+    const todayDay = todayTemplate ? mergeTemplateWithProgress(todayTemplate, todayProgress) : null;
 
     res.json({
       stats: {
@@ -294,7 +289,7 @@ exports.getDashboardData = async (req, res) => {
         skipped: skippedCount,
         overallProgress
       },
-      todayDayNumber,
+      todayDayNumber: targetDayNum,
       todayDay,
       continueDayNumber,
       activeRoadmap: roadmapType

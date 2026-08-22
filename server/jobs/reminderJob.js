@@ -48,25 +48,30 @@ const checkAndSendReminders = async () => {
         continue; // Not the user's scheduled time
       }
 
-      console.log(`[Scheduler] Firing reminder check for user: ${user.name} (${user.email})`);
-
-      const dayNumber = getCurrentRoadmapDayNumber(user.roadmapStartDate, tz);
-      
-      // Templates are typically 1-45 days
-      if (dayNumber < 1 || dayNumber > 45) {
-        console.log(`[Scheduler] User ${user.name} is on Day ${dayNumber}. Out of bounds (1-45). Skipping.`);
+      if (!user.activeRoadmap) {
         continue;
       }
 
-      // Check if user has progress logged
-      const progress = await UserProgress.findOne({
+      // Find user's next actionable incomplete day
+      const userProgresses = await UserProgress.find({
         userId: user._id,
-        roadmapType: user.activeRoadmap,
-        dayNumber
+        roadmapType: user.activeRoadmap
       });
 
+      let dayNumber = 1;
+      for (let d = 1; d <= 45; d++) {
+        const prog = userProgresses.find(p => p.dayNumber === d);
+        if (!prog || (prog.status !== 'COMPLETED' && prog.status !== 'SKIPPED')) {
+          dayNumber = d;
+          break;
+        }
+      }
+
+      // Check if user has progress logged for this target day
+      const progress = userProgresses.find(p => p.dayNumber === dayNumber);
+
       if (progress && progress.status === 'COMPLETED') {
-        console.log(`[Scheduler] User ${user.name} has already completed Day ${dayNumber}. Skipping.`);
+        console.log(`[Scheduler] User ${user.name} has completed all days or Day ${dayNumber}. Skipping.`);
         continue;
       }
 
