@@ -106,9 +106,27 @@ const getBrevoLogs = (limit = 100) => {
   }
 };
 
+/**
+ * Get all notification logs from MongoDB Atlas (persisted across Render cloud & local)
+ * @param {number} limit - Maximum number of records
+ */
+const getDatabaseNotificationLogs = async (limit = 100) => {
+  try {
+    const logs = await NotificationLog.find()
+      .populate('userId', 'name email')
+      .sort({ sentAt: -1 })
+      .limit(limit);
+    return logs;
+  } catch (err) {
+    console.error('[Notification Log DB Error]:', err.message);
+    return [];
+  }
+};
+
 module.exports = {
   logBrevoEmail,
   cleanOldLogs,
   getBrevoLogs,
+  getDatabaseNotificationLogs,
   LOG_FILE
 };

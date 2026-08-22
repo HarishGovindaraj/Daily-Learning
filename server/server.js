@@ -4,6 +4,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const { initScheduler } = require('./jobs/reminderJob');
 const { initLogCleanupJob } = require('./jobs/cleanupJob');
+const { initWeeklyTestMailJob } = require('./jobs/weeklyTestMailJob');
 const apiRoutes = require('./routes/api');
 
 const app = express();
@@ -38,4 +39,5 @@ app.listen(PORT, async () => {
   // Initialize scheduler and load cron configs
   await initScheduler();
   await initLogCleanupJob();
+  initWeeklyTestMailJob();
 });

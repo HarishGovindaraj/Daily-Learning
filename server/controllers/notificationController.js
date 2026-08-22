@@ -81,12 +81,19 @@ exports.sendTestSMS = async (req, res) => {
 };
 
 // GET /api/notifications/brevo-logs
-const { getBrevoLogs } = require('../services/brevoLogService');
-exports.getBrevoLogsEndpoint = (req, res) => {
+const { getBrevoLogs, getDatabaseNotificationLogs } = require('../services/brevoLogService');
+exports.getBrevoLogsEndpoint = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 100;
-    const logs = getBrevoLogs(limit);
-    res.json({ success: true, count: logs.length, logs });
+    const fileLogs = getBrevoLogs(limit);
+    const databaseLogs = await getDatabaseNotificationLogs(limit);
+    res.json({
+      success: true,
+      fileLogCount: fileLogs.length,
+      fileLogs,
+      databaseLogCount: databaseLogs.length,
+      databaseLogs
+    });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
