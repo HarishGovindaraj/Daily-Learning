@@ -334,11 +334,23 @@ exports.selectRoadmap = async (req, res) => {
     }
 
     user.activeRoadmap = roadmapType;
+
+    // When starting a new roadmap, reset the start date to today if no progress has been made yet
+    const completedCountInNew = await UserProgress.countDocuments({
+      userId: user._id,
+      roadmapType,
+      status: 'COMPLETED'
+    });
+    if (completedCountInNew === 0) {
+      user.roadmapStartDate = new Date().toISOString().split('T')[0];
+    }
+
     await user.save();
 
     res.json({
       message: `Successfully selected active roadmap: ${roadmapType}`,
-      activeRoadmap: user.activeRoadmap
+      activeRoadmap: user.activeRoadmap,
+      roadmapStartDate: user.roadmapStartDate
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

@@ -13,9 +13,15 @@ let schedulerCronJob = null;
 const getCurrentRoadmapDayNumber = (startDateStr, timezone) => {
   const tz = timezone || 'Asia/Kolkata';
   const now = moment().tz(tz).startOf('day');
+  if (!startDateStr) {
+    return 1;
+  }
   const start = moment.tz(startDateStr, 'YYYY-MM-DD', tz).startOf('day');
+  if (!start.isValid()) {
+    return 1;
+  }
   const diffDays = now.diff(start, 'days');
-  return diffDays + 1; // Day 1 = start date
+  return Math.max(1, diffDays + 1); // Day 1 = start date
 };
 
 /**

@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
     },
     roadmapStartDate: {
       type: String,
-      default: new Date().toISOString().split('T')[0] // Default to today
+      default: () => new Date().toISOString().split('T')[0] // Dynamically evaluated at user creation
     },
     activeRoadmap: {
       type: String,

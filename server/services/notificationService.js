@@ -11,12 +11,22 @@ const sendDailyReminder = async (user, day, isTest = false) => {
   const remainingTasks = totalTasks - completedTasks;
   const appUrl = process.env.APP_URL || 'http://localhost:5173';
 
-  const emailSubject = `📚 Data Engineering — Day ${day.dayNumber} Learning Reminder`;
+  const roadmapTitles = {
+    'data-engineering': 'Data Engineering',
+    'full-stack': 'Full Stack Development',
+    'java': 'Java Backend Development',
+    'flutter': 'Flutter App Development',
+    'angular': 'Angular Frontend Development',
+    'sql-database': 'SQL & Database Engineering'
+  };
+  const roadmapName = roadmapTitles[user.activeRoadmap] || 'Daily Learning';
+
+  const emailSubject = `📚 ${roadmapName} — Day ${day.dayNumber} Learning Reminder`;
   const emailHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
-      <h2 style="color: #1890ff; text-align: center;">📚 Data Engineering Learning Tracker</h2>
+      <h2 style="color: #1890ff; text-align: center;">📚 ${roadmapName} Tracker</h2>
       <p>Hello ${user.name || 'Student'},</p>
-      <p>You haven't completed today's Data Engineering learning yet.</p>
+      <p>You haven't completed today's ${roadmapName} learning yet.</p>
       
       <div style="background-color: #f5f5f5; padding: 15px; border-radius: 4px; margin: 15px 0;">
         <strong>Today's Topic:</strong><br/>
@@ -37,11 +47,11 @@ const sendDailyReminder = async (user, day, isTest = false) => {
 
       <p>Good luck!</p>
       <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;"/>
-      <p style="font-size: 0.85em; color: #888; text-align: center;">— Data Engineering Roadmap</p>
+      <p style="font-size: 0.85em; color: #888; text-align: center;">— ${roadmapName} Roadmap</p>
     </div>
   `;
 
-  const smsBody = `📚 Data Engineering Reminder:
+  const smsBody = `📚 ${roadmapName} Reminder:
 Day ${day.dayNumber} — ${day.topic}
 Progress: ${completedTasks}/${totalTasks} tasks completed.
 Complete today's learning before the day ends.`;
